@@ -1,6 +1,6 @@
 package com.example.project3.banking;
 
-import util.Date;
+import com.example.project3.util.Date;
 
 /**
  * AccountNode class used for the Archive to store closed Accounts in a linked list implementation.

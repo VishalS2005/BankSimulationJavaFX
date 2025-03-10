@@ -1,6 +1,6 @@
 package com.example.project3.banking;
 
-import util.Date;
+import com.example.project3.util.Date;
 
 /**
  * Represents a Money Market account, which is a specialized type of Savings account

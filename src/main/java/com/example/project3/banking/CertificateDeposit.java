@@ -1,6 +1,6 @@
 package com.example.project3.banking;
 
-import util.Date;
+import com.example.project3.util.Date;
 
 /**
  * Represents a Certificate Deposit account, which is a time-bound savings account

@@ -1,6 +1,6 @@
 package com.example.project3.banking;
 
-import util.Date;
+import com.example.project3.util.Date;
 
 /**
  * The Profile class holds the information regarding a person who holds the bank account,
