@@ -1,7 +1,7 @@
 package com.example.project3.util;
 
-import banking.Account;
-import banking.AccountDatabase;
+import com.example.project3.banking.Account;
+import com.example.project3.banking.AccountDatabase;
 
 /**
  * This class provides sorting functionality for accounts in an {@code AccountDatabase}.
