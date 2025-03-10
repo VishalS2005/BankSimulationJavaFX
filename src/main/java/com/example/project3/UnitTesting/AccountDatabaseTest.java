@@ -1,6 +1,6 @@
 package com.example.project3.UnitTesting;
 
-import banking.*;
+import com.example.project3.banking.*;
 
 import static org.junit.Assert.*;
 

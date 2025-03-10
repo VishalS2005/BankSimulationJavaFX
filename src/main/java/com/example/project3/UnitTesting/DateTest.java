@@ -1,7 +1,7 @@
 package com.example.project3.UnitTesting;
 
 import org.junit.Test;
-import util.Date;
+import com.example.project3.util.Date;
 import static org.junit.Assert.*;
 
 /**

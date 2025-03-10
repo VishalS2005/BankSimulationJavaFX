@@ -1,9 +1,9 @@
 package com.example.project3.UnitTesting;
 
-import banking.Profile;
+import com.example.project3.banking.Profile;
 import org.junit.Test;
-import util.Date;
-import static org.junit.Assert.*;
+import com.example.project3.util.Date;
+import org.junit.Assert.*;
 
 /**
  * The ProfileTest class contains a series of unit tests designed to test the compareTo method
