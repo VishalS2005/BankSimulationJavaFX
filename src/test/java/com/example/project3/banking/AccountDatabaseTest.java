@@ -1,12 +1,10 @@
-package com.example.project3.UnitTesting;
-
-import com.example.project3.banking.*;
+package com.example.project3.banking;
 
 import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
-import util.Date;
+import com.example.project3.util.Date;
 
 /**
  * The AccountDatabaseTest class is a test suite for validating the behavior of the AccountDatabase class.

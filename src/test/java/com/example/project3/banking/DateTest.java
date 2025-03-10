@@ -1,4 +1,4 @@
-package com.example.project3.UnitTesting;
+package com.example.project3.banking;
 
 import org.junit.Test;
 import com.example.project3.util.Date;

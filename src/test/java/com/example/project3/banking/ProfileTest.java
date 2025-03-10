@@ -1,6 +1,5 @@
-package com.example.project3.UnitTesting;
+package com.example.project3.banking;
 
-import com.example.project3.banking.Profile;
 import org.junit.Test;
 import com.example.project3.util.Date;
 import org.junit.Assert.*;
