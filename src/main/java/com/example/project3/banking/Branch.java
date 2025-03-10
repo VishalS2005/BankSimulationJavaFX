@@ -1,4 +1,4 @@
-package banking;
+package com.example.project3.banking;
 
 /**
  * The Branch enum class holds the information regarding all the different types of Branch locations.

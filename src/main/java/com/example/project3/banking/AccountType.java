@@ -1,4 +1,4 @@
-package banking;
+package com.example.project3.banking;
 
 /**
  * The AccountType class holds the information regarding all the different types of accounts that can be opened at the bank.

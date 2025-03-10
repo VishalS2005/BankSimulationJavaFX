@@ -1,4 +1,4 @@
-package banking;
+package com.example.project3.banking;
 
 /**
  * The Checking class represents a type of bank account with a specific interest rate,

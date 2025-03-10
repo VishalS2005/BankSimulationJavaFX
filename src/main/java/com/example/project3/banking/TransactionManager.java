@@ -1,4 +1,4 @@
-package banking;
+package com.example.project3.banking;
 
 import util.Date;
 import util.List;

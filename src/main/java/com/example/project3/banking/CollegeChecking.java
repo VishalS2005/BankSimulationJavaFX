@@ -1,4 +1,4 @@
-package banking;
+package com.example.project3.banking;
 
 /**
  * CollegeChecking is a specialized type of Checking account tailored for college students.

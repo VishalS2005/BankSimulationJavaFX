@@ -1,4 +1,4 @@
-package UnitTesting;
+package com.example.project3.UnitTesting;
 
 import banking.Profile;
 import org.junit.Test;

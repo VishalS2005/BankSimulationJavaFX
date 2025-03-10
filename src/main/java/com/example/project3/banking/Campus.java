@@ -1,4 +1,4 @@
-package banking;
+package com.example.project3.banking;
 
 /**
  * The Campus enum class represents different campus locations.

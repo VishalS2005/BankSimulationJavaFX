@@ -1,4 +1,4 @@
-package banking;
+package com.example.project3.banking;
 
 /**
  * Extends the account class

@@ -1,4 +1,4 @@
-package banking;
+package com.example.project3.banking;
 
 import java.io.IOException;
 
