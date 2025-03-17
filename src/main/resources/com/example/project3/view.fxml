@@ -1,16 +1,252 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
-
 <?import javafx.scene.control.Button?>
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.example.project3.Controller">
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-    </padding>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 
-    <Label fx:id="welcomeText"/>
-    <Button text="Hello!" onAction="#onHelloButtonClick"/>
-</VBox>
+<BorderPane prefHeight="750.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <center>
+      <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+        <tabs>
+          <Tab text="Open Account">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <HBox layoutY="6.0">
+                           <children>
+                              <GridPane prefHeight="515.0" prefWidth="700.0">
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="345.0" minWidth="10.0" prefWidth="132.99998474121094" />
+                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="567.0000152587891" minWidth="10.0" prefWidth="567.0000152587891" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints maxHeight="69.4" minHeight="10.0" prefHeight="42.0" vgrow="SOMETIMES" />
+                                  <RowConstraints maxHeight="135.39999618530274" minHeight="10.0" prefHeight="40.4" vgrow="SOMETIMES" />
+                                  <RowConstraints maxHeight="201.60000000000002" minHeight="10.0" prefHeight="38.8" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="256.8" minHeight="10.0" prefHeight="222.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="131.0" minHeight="10.0" prefHeight="90.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="136.39999999999998" minHeight="10.0" prefHeight="83.59999999999997" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                                    <Label alignment="CENTER_RIGHT" prefHeight="18.0" prefWidth="135.0" text="First Name:" />
+                                    <Label alignment="CENTER_RIGHT" prefHeight="18.0" prefWidth="135.0" text="Last Name:" GridPane.rowIndex="1" />
+                                    <Label alignment="CENTER_RIGHT" prefHeight="18.0" prefWidth="136.0" text="Date of Birth:" GridPane.rowIndex="2" />
+                                    <TextField promptText="max 20 characters" GridPane.columnIndex="1" />
+                                    <TextField promptText="max 20 characters" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <DatePicker promptText="Date of Birth" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                    <Label alignment="CENTER_RIGHT" prefHeight="18.0" prefWidth="132.0" text="Account Type:" GridPane.rowIndex="3" />
+                                    <Label alignment="CENTER_RIGHT" prefHeight="18.0" prefWidth="134.0" text="Initial Deposit:" GridPane.rowIndex="4" />
+                                    <TextField promptText="Enter the amount" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                    <GridPane GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                      <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="278.0" minWidth="10.0" prefWidth="176.6" />
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="400.19999999999993" minWidth="10.0" prefWidth="390.19999999999993" />
+                                      </columnConstraints>
+                                      <rowConstraints>
+                                        <RowConstraints maxHeight="63.4" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
+                                        <RowConstraints maxHeight="83.0" minHeight="10.0" prefHeight="63.1999771118164" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="61.4000228881836" minHeight="10.0" prefHeight="56.000022888183594" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="52.400000000000006" minHeight="10.0" prefHeight="52.400000000000006" vgrow="SOMETIMES" />
+                                      </rowConstraints>
+                                       <children>
+                                          <RadioButton fx:id="rb_cc" mnemonicParsing="false" text="College Checking" GridPane.rowIndex="1">
+                                             <toggleGroup>
+                                                <ToggleGroup fx:id="at_types" />
+                                             </toggleGroup>
+                                             <GridPane.margin>
+                                                <Insets left="10.0" />
+                                             </GridPane.margin></RadioButton>
+                                          <RadioButton fx:id="rb_cd" mnemonicParsing="false" text="Certificate Deposit" toggleGroup="$at_types" GridPane.rowIndex="3">
+                                             <GridPane.margin>
+                                                <Insets left="10.0" />
+                                             </GridPane.margin></RadioButton>
+                                          <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="2">
+                                             <children>
+                                                <RadioButton fx:id="rb_savings" mnemonicParsing="false" text="Savings" toggleGroup="$at_types">
+                                                   <HBox.margin>
+                                                      <Insets left="10.0" />
+                                                   </HBox.margin></RadioButton>
+                                                <RadioButton fx:id="rb_mm" mnemonicParsing="false" text="Money Market" toggleGroup="$at_types">
+                                                   <HBox.margin>
+                                                      <Insets />
+                                                   </HBox.margin></RadioButton>
+                                             </children>
+                                          </HBox>
+                                          <HBox prefHeight="100.0" prefWidth="200.0">
+                                             <children>
+                                                <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+                                                   <children>
+                                                      <RadioButton fx:id="rb_checking" mnemonicParsing="false" text="Checking" toggleGroup="$at_types">
+                                                         <HBox.margin>
+                                                            <Insets left="10.0" />
+                                                         </HBox.margin>
+                                                      </RadioButton>
+                                                   </children>
+                                                   <opaqueInsets>
+                                                      <Insets />
+                                                   </opaqueInsets>
+                                                </HBox>
+                                             </children></HBox>
+                                          <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                             <children>
+                                                <Label disable="true" text="Campus:">
+                                                   <HBox.margin>
+                                                      <Insets left="10.0" />
+                                                   </HBox.margin>
+                                                </Label>
+                                                <RadioButton disable="true" mnemonicParsing="false" text="New Brunswick">
+                                                   <toggleGroup>
+                                                      <ToggleGroup fx:id="cm_types" />
+                                                   </toggleGroup>
+                                                </RadioButton>
+                                                <RadioButton disable="true" mnemonicParsing="false" text="Newark" toggleGroup="$cm_types" />
+                                                <RadioButton disable="true" mnemonicParsing="false" text="Camden" toggleGroup="$cm_types" />
+                                             </children>
+                                          </HBox>
+                                          <CheckBox disable="true" mnemonicParsing="false" text="Loyal Customer" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                             <GridPane.margin>
+                                                <Insets left="10.0" />
+                                             </GridPane.margin>
+                                          </CheckBox>
+                                          <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                             <children>
+                                                <ComboBox fx:id="termComboBox" prefHeight="26.0" prefWidth="115.0" promptText="Term">
+                                                   <HBox.margin>
+                                                      <Insets left="10.0" />
+                                                   </HBox.margin>
+                                                </ComboBox>
+                                                <Label text="Date Open">
+                                                   <HBox.margin>
+                                                      <Insets left="10.0" />
+                                                   </HBox.margin>
+                                                </Label>
+                                                <DatePicker promptText="date open">
+                                                   <opaqueInsets>
+                                                      <Insets />
+                                                   </opaqueInsets>
+                                                   <HBox.margin>
+                                                      <Insets left="10.0" />
+                                                   </HBox.margin>
+                                                </DatePicker>
+                                             </children>
+                                          </HBox>
+                                       </children>
+                                       <GridPane.margin>
+                                          <Insets />
+                                       </GridPane.margin>
+                                    </GridPane>
+                                    <HBox alignment="CENTER_LEFT" prefHeight="134.0" prefWidth="652.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                                       <children>
+                                          <ComboBox id="branchComboBox" fx:id="branchComboBox" prefWidth="150.0" promptText="Branch">
+                                             <HBox.margin>
+                                                <Insets left="10.0" />
+                                             </HBox.margin></ComboBox>
+                                          <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="120.0" text="Open">
+                                             <HBox.margin>
+                                                <Insets left="50.0" />
+                                             </HBox.margin>
+                                          </Button>
+                                          <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="137.0" text="Clear">
+                                             <HBox.margin>
+                                                <Insets left="50.0" />
+                                             </HBox.margin>
+                                          </Button>
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </GridPane>
+                           </children>
+                        </HBox>
+                     </children></AnchorPane>
+            </content>
+          </Tab>
+          <Tab text="Deposit/Withdraw">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <HBox prefHeight="527.0" prefWidth="700.0">
+                           <children>
+                              <GridPane prefHeight="527.0" prefWidth="701.0">
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                                    <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="1">
+                                       <children>
+                                          <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="158.0" text="Load Accounts From File" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                       <children>
+                                          <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="158.0" text="Load Activities From File" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="2">
+                                       <children>
+                                          <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="158.0" text="Print by Holder" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                       <children>
+                                          <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="158.0" text="Print by Branch" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="3">
+                                       <children>
+                                          <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="157.0" text="Print by Account Type" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                       <children>
+                                          <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="158.0" text="Print by Account Statements" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="4">
+                                       <children>
+                                          <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="158.0" text="Print Archive" />
+                                       </children>
+                                    </HBox>
+                                    <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                 </children>
+                              </GridPane>
+                           </children>
+                        </HBox>
+                     </children></AnchorPane>
+            </content>
+          </Tab>
+            <Tab text="Account Management">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              </content>
+            </Tab>
+        </tabs>
+      </TabPane>
+   </center>
+   <bottom>
+      <TextArea prefHeight="196.0" prefWidth="700.0" BorderPane.alignment="CENTER" />
+   </bottom>
+</BorderPane>
