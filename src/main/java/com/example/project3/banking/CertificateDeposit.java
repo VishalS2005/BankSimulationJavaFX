@@ -85,6 +85,18 @@ public class CertificateDeposit extends Savings {
         this.isLoyal = false;
     }
 
+    public CertificateDeposit(Branch branch, AccountType type, Profile holder, double balance) {
+        super(branch, type, holder, balance);
+        this.isLoyal = false;
+    }
+
+    public void setTerm(int term) {
+        this.term = term;
+    }
+
+    public void setOpen(Date open) {
+        this.open = open;
+    }
     /**
      * Retrieves the opening date of the certificate deposit account.
      *
