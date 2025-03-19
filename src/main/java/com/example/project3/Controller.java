@@ -1,12 +1,18 @@
 package com.example.project3;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 
 public class Controller {
+    @FXML
+    private TextField firstName;
+
+    @FXML
+    private TextField lastName;
+
+    @FXML
+    private TextArea resultText;
+
     @FXML
     private RadioButton rb_cc;
 
@@ -38,6 +44,16 @@ public class Controller {
     public void initialize() {
         termComboBox.getItems().addAll(3,6,9,12);
         branchComboBox.getItems().addAll("Edison", "Bridgewater", "Princeton", "Piscataway", "Warren");
+    }
+
+    @FXML
+    public void openAccount() {
+        try {
+            String first = firstName.getText();
+            String last = lastName.getText();
+        } catch (NullPointerException e) {
+            resultText.setText("Please provide more information to open account.");
+        }
     }
 
 }
