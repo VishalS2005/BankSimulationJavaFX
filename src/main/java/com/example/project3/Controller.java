@@ -63,7 +63,7 @@ public class Controller {
             String last = lastName.getText();
 
         } catch (NullPointerException e) {
-            resultText.setText("Please provide more information to open account.");
+            resultText.appendText("Please provide more information to open account.\n");
         }
     }
 
