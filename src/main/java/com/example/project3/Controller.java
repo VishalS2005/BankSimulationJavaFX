@@ -47,6 +47,9 @@ public class Controller {
     private ComboBox<Integer> termComboBox; // Make sure to link this with your ComboBox in FXML
 
     @FXML
+    private Button open;
+
+    @FXML
     public void initialize() {
         Integer[] terms = new Integer[] {3, 6, 9, 12};
         Branch[] branches = new Branch[] {Branch.EDISON, Branch.BRIDGEWATER, Branch.PRINCETON, Branch.PISCATAWAY, Branch.WARREN};
