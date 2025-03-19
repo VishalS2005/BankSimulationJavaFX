@@ -1,6 +1,7 @@
 package com.example.project3;
 
 import com.example.project3.banking.AccountDatabase;
+import com.example.project3.banking.Branch;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -40,7 +41,7 @@ public class Controller {
     private ToggleGroup cm_types;
 
     @FXML
-    private ComboBox<String> branchComboBox;
+    private ComboBox<Branch> branchComboBox;
 
     @FXML
     private ComboBox<Integer> termComboBox; // Make sure to link this with your ComboBox in FXML
@@ -48,9 +49,9 @@ public class Controller {
     @FXML
     public void initialize() {
         Integer[] terms = new Integer[] {3, 6, 9, 12};
-        String[] branches = new String[] {"Edison", "Bridgewater", "Princeton", "Piscataway", "Warren"};
+        Branch[] branches = new Branch[] {Branch.EDISON, Branch.BRIDGEWATER, Branch.PRINCETON, Branch.PISCATAWAY, Branch.WARREN};
         ObservableList<Integer> termsList = FXCollections.observableArrayList(terms);
-        ObservableList<String> branchList = FXCollections.observableArrayList(branches);
+        ObservableList<Branch> branchList = FXCollections.observableArrayList(branches);
         termComboBox.setItems(termsList);
         branchComboBox.setItems(branchList);
     }
@@ -60,6 +61,7 @@ public class Controller {
         try {
             String first = firstName.getText();
             String last = lastName.getText();
+
         } catch (NullPointerException e) {
             resultText.setText("Please provide more information to open account.");
         }
