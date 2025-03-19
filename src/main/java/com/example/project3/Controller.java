@@ -34,6 +34,7 @@ public class Controller {
     @FXML
     private ComboBox<Integer> termComboBox; // Make sure to link this with your ComboBox in FXML
 
+    @FXML
     public void initialize() {
         termComboBox.getItems().addAll(3,6,9,12);
         branchComboBox.getItems().addAll("Edison", "Bridgewater", "Princeton", "Piscataway", "Warren");
