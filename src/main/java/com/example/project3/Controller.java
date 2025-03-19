@@ -1,5 +1,7 @@
 package com.example.project3;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
@@ -42,8 +44,12 @@ public class Controller {
 
     @FXML
     public void initialize() {
-        termComboBox.getItems().addAll(3,6,9,12);
-        branchComboBox.getItems().addAll("Edison", "Bridgewater", "Princeton", "Piscataway", "Warren");
+        Integer[] terms = new Integer[] {3, 6, 9, 12};
+        String[] branches = new String[] {"Edison", "Bridgewater", "Princeton", "Piscataway", "Warren"};
+        ObservableList<Integer> termsList = FXCollections.observableArrayList(terms);
+        ObservableList<String> branchList = FXCollections.observableArrayList(branches);
+        termComboBox.setItems(termsList);
+        branchComboBox.setItems(branchList);
     }
 
     @FXML
