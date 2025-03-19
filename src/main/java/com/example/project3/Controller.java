@@ -1,11 +1,14 @@
 package com.example.project3;
 
+import com.example.project3.banking.AccountDatabase;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import com.example.project3.banking.AccountDatabase;
 
 public class Controller {
+    public static final AccountDatabase accountDatabase = new AccountDatabase();
     @FXML
     private TextField firstName;
 
