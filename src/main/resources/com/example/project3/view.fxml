@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane prefHeight="750.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.project3.Controller">
+<BorderPane prefHeight="750.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.project3.Controller">
    <center>
       <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
         <tabs>
@@ -64,11 +64,11 @@
                                              <children>
                                                 <RadioButton fx:id="rb_savings" mnemonicParsing="false" text="Savings" toggleGroup="$at_types">
                                                    <HBox.margin>
-                                                      <Insets left="10.0" />
+                                                      <Insets />
                                                    </HBox.margin></RadioButton>
                                                 <RadioButton fx:id="rb_mm" mnemonicParsing="false" text="Money Market" toggleGroup="$at_types">
                                                    <HBox.margin>
-                                                      <Insets />
+                                                      <Insets left="7.0" />
                                                    </HBox.margin></RadioButton>
                                              </children>
                                           </HBox>
