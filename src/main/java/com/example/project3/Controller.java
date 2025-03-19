@@ -1,6 +1,7 @@
 package com.example.project3;
 
 import com.example.project3.banking.*;
+import com.example.project3.util.Sort;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -51,15 +52,13 @@ public class Controller {
     private ComboBox<Integer> termComboBox; // Make sure to link this with your ComboBox in FXML
 
     @FXML
-    private Button open;
-
-    @FXML
     private DatePicker dob;
 
 
 
+
     @FXML
-    public void initialize() {
+    private void initialize() {
         Integer[] terms = new Integer[] {3, 6, 9, 12};
         Branch[] branches = new Branch[] {Branch.EDISON, Branch.BRIDGEWATER, Branch.PRINCETON, Branch.PISCATAWAY, Branch.WARREN};
         ObservableList<Integer> termsList = FXCollections.observableArrayList(terms);
@@ -69,7 +68,7 @@ public class Controller {
     }
 
     @FXML
-    public void openAccount() {
+    private void openAccount() {
         try {
             String first = firstName.getText();
             String last = lastName.getText();
@@ -114,6 +113,80 @@ public class Controller {
             return AccountType.SAVINGS;
         }
         return AccountType.CD;
+    }
+
+    @FXML
+    private void printByBranch() {
+        Sort.account(accountDatabase, 'B');
+        String currentCounty = null;
+        resultText.appendText("\n*List of accounts ordered by branch location (county, city).\n");
+        for (int i = 0; i < accountDatabase.size(); i++) {
+            Account account = accountDatabase.get(i);
+            String county = account.getAccountNumber().getBranch().getCounty();
+            if (currentCounty == null || !currentCounty.equals(county)) { // Print county header when encountering a new county
+                resultText.appendText("County: " + county + "\n");
+                currentCounty = county;
+            }
+            resultText.appendText(account + "\n");
+        }
+        resultText.appendText("*end of list.\n\n");
+    }
+
+    @FXML
+    private void printByHolder() {
+        resultText.appendText("\n*List of accounts ordered by account holder and number.\n");
+        Sort.account(accountDatabase, 'H');
+        print();
+    }
+
+    private void print() {
+        for (int i = 0; i < accountDatabase.size(); i++) {
+            System.out.println(accountDatabase.get(i).toString());
+        }
+        resultText.appendText("*end of list.\n\n");
+    }
+
+    @FXML
+    public void printByType() {
+        Sort.account(accountDatabase, 'T');
+
+        AccountType currentType = null;
+        for (int i = 0; i < accountDatabase.size(); i++) {
+            Account account = accountDatabase.get(i);
+            AccountType accountType = account.getAccountNumber().getType();
+            if (currentType == null || !currentType.equals(accountType)) { // Print type header when encountering a new type
+                resultText.appendText("Account Type: " + accountType + "\n");
+                currentType = accountType;
+            }
+            resultText.appendText(account + "\n");
+        }
+        resultText.appendText("*end of list.\n\n");
+    }
+
+    @FXML
+    public void printStatements() {
+        int holderCount = 0;
+        for (int i = 0; i < accountDatabase.size(); i++) {
+            if (i == 0 || !accountDatabase.get(i).getHolder().equals(accountDatabase.get(i - 1).getHolder())) {
+                holderCount++;
+                resultText.appendText(holderCount + "." + accountDatabase.get(i).getHolder() + "\n");
+            }
+            resultText.appendText("\t[Account#] " + accountDatabase.get(i).getAccountNumber() + "\n");
+            accountDatabase.get(i).statement();
+            resultText.appendText("\n");
+        }
+        resultText.appendText("*end of statements.\n\n");
+    }
+
+    @FXML
+    public void printArchive() {
+        resultText.appendText("\n*List of closed accounts in the archive.");
+        AccountNode current = accountDatabase.getArchive().getFirst();
+        while (current != null) {
+            resultText.appendText(current + "\n\n");
+            current = current.getNext();
+        }
+        resultText.appendText("*end of list.\n\n");
     }
 
 }

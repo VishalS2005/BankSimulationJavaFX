@@ -32,6 +32,10 @@ public class AccountDatabase extends List<Account> {
         this.archive = new Archive();
     }
 
+    public Archive getArchive() {
+        return archive;
+    }
+
     /**
      * Deposits money into an Account which will increase the Account's balance.
      * Searches through the AccountDatabase for the Account before depositing the amount of money into that Account.

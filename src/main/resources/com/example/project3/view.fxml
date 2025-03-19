@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane prefHeight="750.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.project3.Controller">
+<BorderPane prefHeight="750.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.project3.Controller">
    <center>
       <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
         <tabs>
@@ -62,7 +62,7 @@
                                              </GridPane.margin></RadioButton>
                                           <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="2">
                                              <children>
-                                                <RadioButton fx:id="rb_savings" mnemonicParsing="false" prefHeight="18.0" prefWidth="95.0" text="Savings" toggleGroup="$at_types">
+                                                <RadioButton fx:id="rb_savings" mnemonicParsing="false" prefHeight="18.0" prefWidth="109.0" text="Savings" toggleGroup="$at_types">
                                                    <HBox.margin>
                                                       <Insets />
                                                    </HBox.margin></RadioButton>
@@ -141,7 +141,7 @@
                                              <HBox.margin>
                                                 <Insets left="10.0" />
                                              </HBox.margin></ComboBox>
-                                          <Button fx:id="open" mnemonicParsing="false" onAction="#openAccount" prefHeight="26.0" prefWidth="120.0" text="Open">
+                                          <Button mnemonicParsing="false" onAction="#openAccount" prefHeight="26.0" prefWidth="120.0" text="Open">
                                              <HBox.margin>
                                                 <Insets left="50.0" />
                                              </HBox.margin>
@@ -182,37 +182,37 @@
                                  <children>
                                     <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="1">
                                        <children>
-                                          <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="158.0" text="Load Accounts From File" />
+                                          <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="250.0" text="Load Accounts From File" />
                                        </children>
                                     </HBox>
                                     <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                        <children>
-                                          <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="158.0" text="Load Activities From File" />
+                                          <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="250.0" text="Load Activities From File" />
                                        </children>
                                     </HBox>
                                     <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="2">
                                        <children>
-                                          <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="158.0" text="Print by Holder" />
+                                          <Button mnemonicParsing="false" onAction="#printByHolder" prefHeight="26.0" prefWidth="250.0" text="Print by Holder" />
                                        </children>
                                     </HBox>
                                     <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                        <children>
-                                          <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="158.0" text="Print by Branch" />
+                                          <Button mnemonicParsing="false" onAction="#printByBranch" prefHeight="26.0" prefWidth="250.0" text="Print by Branch" />
                                        </children>
                                     </HBox>
                                     <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="3">
                                        <children>
-                                          <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="157.0" text="Print by Account Type" />
+                                          <Button mnemonicParsing="false" onAction="#printByType" prefHeight="26.0" prefWidth="250.0" text="Print by Account Type" />
                                        </children>
                                     </HBox>
                                     <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                                        <children>
-                                          <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="158.0" text="Print by Account Statements" />
+                                          <Button mnemonicParsing="false" onAction="#printStatements" prefHeight="26.0" prefWidth="250.0" text="Print by Account Statements" />
                                        </children>
                                     </HBox>
                                     <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="4">
                                        <children>
-                                          <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="158.0" text="Print Archive" />
+                                          <Button mnemonicParsing="false" onAction="#printArchive" prefHeight="26.0" prefWidth="250.0" text="Print Archive" />
                                        </children>
                                     </HBox>
                                     <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />

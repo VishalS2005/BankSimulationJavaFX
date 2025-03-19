@@ -36,6 +36,10 @@ public class Archive {
         first = newNode;
     }
 
+    public AccountNode getFirst() {
+        return first;
+    }
+
     /**
      * Traverses through the linked list, first, and prints each account.
      * Every Account Number, Holder, and Balance of the Account are printed from the Archive.
