@@ -43,14 +43,14 @@
                                     <RowConstraints maxHeight="136.39999999999998" minHeight="10.0" prefHeight="83.59999999999997" vgrow="SOMETIMES" />
                                 </rowConstraints>
                                  <children>
-                                    <Label alignment="CENTER_RIGHT" prefHeight="18.0" prefWidth="135.0" text="First Name:" />
-                                    <Label alignment="CENTER_RIGHT" prefHeight="18.0" prefWidth="135.0" text="Last Name:" GridPane.rowIndex="1" />
-                                    <Label alignment="CENTER_RIGHT" prefHeight="18.0" prefWidth="136.0" text="Date of Birth:" GridPane.rowIndex="2" />
+                                    <Label alignment="CENTER" prefHeight="18.0" prefWidth="135.0" text="First Name:" />
+                                    <Label alignment="CENTER" prefHeight="18.0" prefWidth="135.0" text="Last Name:" GridPane.rowIndex="1" />
+                                    <Label alignment="CENTER" prefHeight="18.0" prefWidth="136.0" text="Date of Birth:" GridPane.rowIndex="2" />
                                     <TextField promptText="max 20 characters" GridPane.columnIndex="1" />
                                     <TextField promptText="max 20 characters" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                     <DatePicker promptText="Date of Birth" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                    <Label alignment="CENTER_RIGHT" prefHeight="18.0" prefWidth="132.0" text="Account Type:" GridPane.rowIndex="3" />
-                                    <Label alignment="CENTER_RIGHT" prefHeight="18.0" prefWidth="134.0" text="Initial Deposit:" GridPane.rowIndex="4" />
+                                    <Label alignment="CENTER" prefHeight="18.0" prefWidth="132.0" text="Account Type:" GridPane.rowIndex="3" />
+                                    <Label alignment="CENTER" prefHeight="18.0" prefWidth="134.0" text="Initial Deposit:" GridPane.rowIndex="4" />
                                     <TextField promptText="Enter the amount" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                                     <GridPane GridPane.columnIndex="1" GridPane.rowIndex="3">
                                       <columnConstraints>
@@ -104,7 +104,7 @@
                                              </children></HBox>
                                           <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                              <children>
-                                                <Label disable="true" text="Campus:">
+                                                <Label alignment="CENTER" disable="true" text="Campus:">
                                                    <HBox.margin>
                                                       <Insets left="10.0" />
                                                    </HBox.margin>
@@ -115,7 +115,7 @@
                                                    </toggleGroup>
                                                 </RadioButton>
                                                 <RadioButton disable="true" mnemonicParsing="false" text="Newark" toggleGroup="$cm_types" />
-                                                <RadioButton disable="true" mnemonicParsing="false" text="Camden" toggleGroup="$cm_types" />
+                                                <RadioButton contentDisplay="CENTER" disable="true" mnemonicParsing="false" text="Camden" toggleGroup="$cm_types" />
                                              </children>
                                           </HBox>
                                           <CheckBox disable="true" mnemonicParsing="false" text="Loyal Customer" GridPane.columnIndex="1" GridPane.rowIndex="2">
