@@ -1,25 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.RadioButton?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToggleGroup?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<BorderPane prefHeight="750.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.project3.Controller">
+<BorderPane prefHeight="750.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.project3.Controller">
    <center>
       <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
         <tabs>
@@ -156,7 +141,7 @@
                                              <HBox.margin>
                                                 <Insets left="10.0" />
                                              </HBox.margin></ComboBox>
-                                          <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="120.0" text="Open">
+                                          <Button fx:id="open" mnemonicParsing="false" onAction="#openAccount" prefHeight="26.0" prefWidth="120.0" text="Open">
                                              <HBox.margin>
                                                 <Insets left="50.0" />
                                              </HBox.margin>
@@ -247,6 +232,6 @@
       </TabPane>
    </center>
    <bottom>
-      <TextArea prefHeight="196.0" prefWidth="700.0" BorderPane.alignment="CENTER" />
+      <TextArea fx:id="resultText" prefHeight="196.0" prefWidth="700.0" BorderPane.alignment="CENTER" />
    </bottom>
 </BorderPane>
