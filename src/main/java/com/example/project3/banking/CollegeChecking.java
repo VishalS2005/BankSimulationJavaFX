@@ -32,13 +32,13 @@ public class CollegeChecking extends Checking {
         this.campus = campus;
     }
 
-    public CollegeChecking(Branch branch, AccountType type, Profile holder, double balance) {
-        super(branch, type, holder, balance);
-    }
-
-    public void setCampus(Campus campus) {
-        this.campus = campus;
-    }
+//    public CollegeChecking(Branch branch, AccountType type, Profile holder, double balance) {
+//        super(branch, type, holder, balance);
+//    }
+//
+//    public void setCampus(Campus campus) {
+//        this.campus = campus;
+//    }
 
     /**
      * Overrides the fee method to calculate the account's monthly fee.

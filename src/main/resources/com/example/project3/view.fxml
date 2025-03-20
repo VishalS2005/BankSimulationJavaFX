@@ -103,7 +103,7 @@
                                                 <RadioButton fx:id="rb_cam" contentDisplay="CENTER" disable="true" mnemonicParsing="false" text="Camden" toggleGroup="$cm_types" />
                                              </children>
                                           </HBox>
-                                          <CheckBox disable="true" mnemonicParsing="false" text="Loyal Customer" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                          <CheckBox fx:id="loyal" disable="true" mnemonicParsing="false" text="Loyal Customer" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                              <GridPane.margin>
                                                 <Insets left="10.0" />
                                              </GridPane.margin>

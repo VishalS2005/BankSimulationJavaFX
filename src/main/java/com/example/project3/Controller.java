@@ -130,6 +130,12 @@ public class Controller {
     @FXML
     private DatePicker dob;
 
+    @FXML
+    private DatePicker openDate;
+
+    @FXML
+    private CheckBox loyal;
+
 
 
     /**
@@ -154,20 +160,30 @@ public class Controller {
         ObservableList<Branch> branchList = FXCollections.observableArrayList(branches);
         termComboBox.setItems(termsList);
         branchComboBox.setItems(branchList);
-
+        rb_checking.setSelected(true);
         disableCampusToggle(true);
+        loyal.setDisable(true);
+        termComboBox.setDisable(true);
         at_types.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue == rb_cc) {
+            if (newValue == rb_checking) {
+                disableCampusToggle(true);
+                termComboBox.setDisable(true);
+                loyal.setDisable(true);
+            }
+            else if (newValue == rb_cc) {
                 disableCampusToggle(false);
                 termComboBox.setDisable(true);
+                loyal.setDisable(true);
             } else if (newValue == rb_cd) {
                 termComboBox.setDisable(false);
                 disableCampusToggle(true);
                 cm_types.selectToggle(null);
+                loyal.setDisable(true);
             } else {
                 termComboBox.setDisable(true);
                 disableCampusToggle(true);
                 cm_types.selectToggle(null);
+                loyal.setDisable(false);
             }
         });
     }
@@ -189,40 +205,33 @@ public class Controller {
      */
     @FXML
     private void openAccount() {
-        double balanceNum = -1;
-        try { balanceNum = Double.parseDouble(balance.getText()); }
-        catch (NumberFormatException e) {
-            resultText.appendText("The following balance: \"" + balance.getText() + "\" - not a valid amount.\n");
-        }
-        List<String> errors = new List<>();
-        String first = firstName.getText();
-        checkName(first, "First name", errors);
-        String last = lastName.getText();
-        checkName(last, "Last name", errors);
-        if(fieldsAreEmpty(errors)) {
-            printErrors(errors);
-            return;
-        }
         AccountType accountType = getAccountType();
         Branch branch = branchComboBox.getSelectionModel().getSelectedItem();
-        checkFieldsWithAccountType(accountType, errors);
-        String date = dob.getValue().toString();
-        String[] dateArray = date.split("-");
-        Date dateOfBirth = new Date(Integer.parseInt(dateArray[1]),
-                Integer.parseInt(dateArray[2]),
-                Integer.parseInt(dateArray[0]));
-        checkDateOfBirth(accountType, dateOfBirth, errors);
-        if (accountType != AccountType.CD && accountDatabase.contains(first, last, dateOfBirth, accountType)) {
-            errors.add(first + " " + last + " already has a " + accountType + " account.\n");
-        }
-        checkBalance(balanceNum, accountType, errors);
-        if(!errors.isEmpty()) {
-            printErrors(errors);
+        Date dateOfBirth = getDOB();
+        String first = firstName.getText();
+        String last = lastName.getText();
+
+        double balanceNum;
+        try { balanceNum = Double.parseDouble(balance.getText()); }
+        catch (NumberFormatException e) {
+            resultText.appendText("For input string \"" + balance.getText() + "\" - not a valid amount.\n");
             return;
         }
+        if (accountType != AccountType.CD && accountDatabase.contains(first, last, dateOfBirth, accountType)) {
+            resultText.appendText(first + " " + last + " already has a " + accountType + " account.\n");
+        }
+        checkBalance(balanceNum, accountType);
         Account account = createAccount(first, last, dateOfBirth, accountType, branch, balanceNum);
         accountDatabase.add(account);
         resultText.appendText(account.getAccountNumber().getType() + " account " + account.getAccountNumber() + " has been opened.");
+    }
+
+    private Date getDOB() {
+        String date = dob.getValue().toString();
+        String[] dateArray = date.split("-");
+        return new Date(Integer.parseInt(dateArray[1]),
+                Integer.parseInt(dateArray[2]),
+                Integer.parseInt(dateArray[0]));
     }
 
     /**
@@ -281,9 +290,29 @@ public class Controller {
             case CHECKING ->  new Checking(branch, AccountType.CHECKING, holder, balance);
             case SAVINGS -> new Savings(branch, AccountType.SAVINGS, holder, balance);
             case MONEY_MARKET -> new MoneyMarket(branch, AccountType.MONEY_MARKET, holder, balance);
-            case COLLEGE_CHECKING -> new CollegeChecking(branch, AccountType.COLLEGE_CHECKING, holder, balance);
-            case CD -> new CertificateDeposit(branch, AccountType.CD, holder, balance);
+            case COLLEGE_CHECKING -> new CollegeChecking(branch, AccountType.COLLEGE_CHECKING, holder, getCampus(), balance);
+            case CD -> new CertificateDeposit(branch, AccountType.CD, holder, termComboBox.getValue(), getOpenDate(), balance);
         };
+    }
+
+    private Date getOpenDate() {
+        String date = openDate.getValue().toString();
+        String[] dateArray = date.split("-");
+        return new Date(Integer.parseInt(dateArray[1]),
+                Integer.parseInt(dateArray[2]),
+                Integer.parseInt(dateArray[0]));
+    }
+
+    private Campus getCampus() {
+        if(rb_nb.isSelected()) {
+            return Campus._1;
+        }
+        else if (rb_nw.isSelected()) {
+            return Campus._2;
+        }
+        else {
+            return Campus._3;
+        }
     }
 
     /**
@@ -310,15 +339,14 @@ public class Controller {
      *
      * @param balance  value of money stored in Account being opened
      * @param acctType type of Account being opened
-     * @param errors collection of error messages
      */
-    private void checkBalance(double balance, AccountType acctType, List<String> errors) {
+    private void checkBalance(double balance, AccountType acctType) {
         if (balance <= 0) { //balance must be more than 0
-            errors.add("Initial deposit cannot be 0 or negative.\n");
+            resultText.appendText("Initial deposit cannot be 0 or negative.\n");
         } else if (balance < MONEY_MARKET_MINIMUM && acctType.equals(AccountType.MONEY_MARKET)) { //Money Market account must have at least $2000
-            errors.add("Minimum of $2,000 to open a Money Market account.\n");
+            resultText.appendText("Minimum of $2,000 to open a Money Market account.\n");
         } else if (balance < CD_MINIMUM && acctType.equals(AccountType.CD)) {
-            errors.add("Minimum of $1,000 to open a Certificate Deposit account.\n");
+            resultText.appendText("Minimum of $1,000 to open a Certificate Deposit account.\n");
         }
     }
 
@@ -392,7 +420,7 @@ public class Controller {
      */
     private void print() {
         for (int i = 0; i < accountDatabase.size(); i++) {
-            resultText.appendText(accountDatabase.get(i).toString());
+            resultText.appendText(accountDatabase.get(i) + "\n");
         }
         resultText.appendText("*end of list.\n\n");
     }
@@ -495,6 +523,7 @@ public class Controller {
     @FXML
     private void loadAccounts() throws FileNotFoundException {
 
+        resultText.appendText("Accounts in \"accounts.txt\" loaded to the database.\n");
         FileChooser fileChooser = new FileChooser();
 
         File file = fileChooser.showOpenDialog(stage);
@@ -588,6 +617,8 @@ public class Controller {
             }
             resultText.appendText(accountNumber + "::" + activity + "\n");
         }
+
+        resultText.appendText("Processing \"" + file + "\"...\n");
     }
 }
 
