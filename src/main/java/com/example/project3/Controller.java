@@ -6,9 +6,19 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.util.Scanner;
+
+import java.io.File;
+import java.io.FileNotFoundException;
 
 public class Controller {
     public static final AccountDatabase accountDatabase = new AccountDatabase();
+
+    public Stage stage;
 
     /**
      * Text field that will take in a decimal value representative of a client's initial deposit.
@@ -111,6 +121,8 @@ public class Controller {
      */
     @FXML
     private DatePicker dob;
+
+
 
     /**
      * When the user interface is created, the program initializes the items in the combo boxes.
@@ -341,8 +353,9 @@ public class Controller {
      * Prints sorted by AccountType.
      */
     @FXML
-    public void printByType() {
+    private void printByType() {
         Sort.account(accountDatabase, 'T');
+        resultText.appendText("\n*List of accounts ordered by account type and number.\n");
 
         AccountType currentType = null;
         for (int i = 0; i < accountDatabase.size(); i++) {
@@ -362,7 +375,8 @@ public class Controller {
      * The method iterates through all accounts in the Account
      */
     @FXML
-    public void printStatements() {
+    private void printStatements() {
+        resultText.appendText("*Account statements by account holder.\n");
         int holderCount = 0;
         for (int i = 0; i < accountDatabase.size(); i++) {
             if (i == 0 || !accountDatabase.get(i).getHolder().equals(accountDatabase.get(i - 1).getHolder())) {
@@ -380,8 +394,8 @@ public class Controller {
      * Prints all the Accounts that have been closed and are in the Archive
      */
     @FXML
-    public void printArchive() {
-        resultText.appendText("\n*List of closed accounts in the archive.");
+    private void printArchive() {
+        resultText.appendText("\n*List of closed accounts in the archive.\n");
         AccountNode current = accountDatabase.getArchive().getFirst();
         while (current != null) {
             resultText.appendText(current + "\n\n");
@@ -390,6 +404,104 @@ public class Controller {
         resultText.appendText("*end of list.\n\n");
     }
 
+    @FXML
+    private void loadAccounts() throws FileNotFoundException {
+
+        FileChooser fileChooser = new FileChooser();
+
+        File file = fileChooser.showOpenDialog(stage);
+
+        Scanner scanner = new Scanner(file);
+
+        while (scanner.hasNextLine()) {
+            String line = scanner.nextLine();
+            if (line.trim().isEmpty()) {
+                continue;
+            }
+            String[] parts = line.split(",");
+            Account account = createAccount(parts);
+            accountDatabase.add(account);
+        }
+
+    }
+
+    public static Account createAccount(String[] commandArray) {
+        String accountType = commandArray[0];
+        Branch branch = createBranch(commandArray[1]); //second input is the Branch
+        String firstName = commandArray[2]; //third input is the first name of the holder
+        String lastName = commandArray[3]; //fourth input is the last name of the holder
+        Date dateOfBirth = createDate(commandArray[4]); //fifth input is the Date of Birth of the holder
+        double amount = Double.parseDouble(commandArray[5]);
+        return getAccount(commandArray, firstName, lastName, dateOfBirth, branch, accountType, amount);
+    }
+
+    public static Branch createBranch(String branchName) {
+        Branch branch = null;
+        try {
+            branch = Branch.valueOf(branchName.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            System.out.println(branchName + " - invalid branch.");
+        }
+        return branch;
+    }
+
+    public static Date createDate(String date) {
+        String[] dateParts = date.split("/");
+        int month = Integer.parseInt(dateParts[0]);
+        int day = Integer.parseInt(dateParts[1]);
+        int year = Integer.parseInt(dateParts[2]);
+        return new Date(month, day, year);
+    }
+
+    private static Account getAccount(String[] commandArray, String firstName, String lastName, Date dateOfBirth, Branch branch, String accountType, double balance) {
+        Profile holder = new Profile(firstName, lastName, dateOfBirth);
+        accountType = accountType.toLowerCase();
+        return switch (accountType) {
+            case "checking" -> new Checking(branch, AccountType.CHECKING, holder, balance);
+            case "savings" -> new Savings(branch, AccountType.SAVINGS, holder, balance);
+            case "moneymarket" ->
+                    new MoneyMarket(branch, AccountType.MONEY_MARKET, holder, balance);
+            case "college" ->
+                    new CollegeChecking(branch, AccountType.COLLEGE_CHECKING, holder, Campus.fromCode(commandArray[commandArray.length - 1]), balance);
+            case "certificate" ->
+                    new CertificateDeposit(branch, AccountType.CD, holder, Integer.parseInt(commandArray[commandArray.length - 2]), createDate(commandArray[commandArray.length - 1]), balance);
+            default -> throw new IllegalStateException("Unexpected value: " + accountType);
+        };
+    }
+
+    @FXML
+    public void processActivities() throws IOException {
+
+        FileChooser fileChooser = new FileChooser();
+
+        File file = fileChooser.showOpenDialog(stage);
+
+        Scanner scanner = new Scanner(file);
+        while (scanner.hasNextLine()) {
+            String line = scanner.nextLine();
+            if (line.trim().isEmpty()) {
+                continue;
+            }
+            String[] parts = line.split(",");
+            Date date = TransactionManager.createDate(parts[2]);
+            Branch branch = TransactionManager.createBranch(parts[3]);
+            char type = parts[0].charAt(0);
+            double amount = Double.parseDouble(parts[4]);
+            Activity activity = new Activity(date, branch, type, amount, true);
+            AccountNumber accountNumber = new AccountNumber(parts[1]);
+            int index = accountDatabase.find(accountNumber);
+            if (index == -1) {
+                continue;
+            }
+            if (type == 'W') {
+                accountDatabase.get(index).withdraw(date, branch, amount);
+            } else {
+                accountDatabase.get(index).deposit(date, branch, amount);
+            }
+            resultText.appendText(accountNumber + "::" + activity + "\n");
+        }
+    }
 }
+
 
 
