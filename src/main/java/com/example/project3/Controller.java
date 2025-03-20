@@ -12,51 +12,111 @@ import com.example.project3.util.Date;
 public class Controller {
     public static final AccountDatabase accountDatabase = new AccountDatabase();
 
+    /**
+     * Text field that will take in a decimal value representative of a client's initial deposit.
+     */
     @FXML
     private TextField balance;
 
+    /**
+     * Text field that will take in the client's first name.
+     */
     @FXML
     private TextField firstName;
 
+    /**
+     * Text field that will take in the client's last name.
+     */
     @FXML
     private TextField lastName;
 
+    /**
+     * Text area that will display all the output.
+     */
     @FXML
     private TextArea resultText;
 
-    @FXML
-    private RadioButton rb_cc;
-
-    @FXML
-    private RadioButton rb_cd;
-
+    /**
+     * Radio button that represents the "Checking" Account Type.
+     */
     @FXML
     private RadioButton rb_checking;
 
+    /**
+     * Radio button that represents the "College Checking" Account Type.
+     */
     @FXML
-    private RadioButton rb_mm;
+    private RadioButton rb_cc;
 
+    /**
+     * Radio button that represents the "Savings" Account Type.
+     */
     @FXML
     private RadioButton rb_savings;
 
+    /**
+     * Radio button that represents the "Money Market" Account Type.
+     */
+    @FXML
+    private RadioButton rb_mm;
+
+    /**
+     * Radio button that represents the "Certificate Deposit" Account Type.
+     */
+    @FXML
+    private RadioButton rb_cd;
+
+    /**
+     * Radio button that represents the "New Brunswick" Campus.
+     */
+    @FXML
+    private RadioButton rb_nb;
+
+    /**
+     * Radio button that represents the "Newark" Campus.
+     */
+    @FXML
+    private RadioButton rb_nw;
+
+    /**
+     * Radio button that represents the "Camden" Campus.
+     */
+    @FXML
+    private RadioButton rb_cam;
+
+    /**
+     * Toggle group for the Account Type buttons.
+     */
     @FXML
     private ToggleGroup at_types;
 
+    /**
+     * Toggle group for the Campus buttons.
+     */
     @FXML
     private ToggleGroup cm_types;
 
+    /**
+     * Drop down that represents the 5 different Branch locations that can be chosen.
+     */
     @FXML
     private ComboBox<Branch> branchComboBox;
 
+    /**
+     * Drop down that represents the term of a year.
+     */
     @FXML
     private ComboBox<Integer> termComboBox; // Make sure to link this with your ComboBox in FXML
 
+    /**
+     * Date picker that represents the date of birth of a client.
+     */
     @FXML
     private DatePicker dob;
 
-
-
-
+    /**
+     * When the user interface is created, the program initializes the items in the combo boxes.
+     */
     @FXML
     private void initialize() {
         Integer[] terms = new Integer[] {3, 6, 9, 12};
@@ -65,8 +125,33 @@ public class Controller {
         ObservableList<Branch> branchList = FXCollections.observableArrayList(branches);
         termComboBox.setItems(termsList);
         branchComboBox.setItems(branchList);
+
+        disableCampusToggle(true);
+        at_types.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == rb_cc) {
+                disableCampusToggle(false);
+            } else {
+                disableCampusToggle(true);
+                cm_types.selectToggle(null);
+            }
+        });
     }
 
+    /**
+     * Enables/disables the campus toggle group.
+     */
+    private void disableCampusToggle(boolean disable){
+        rb_nb.setDisable(disable);
+        rb_nw.setDisable(disable);
+        rb_cam.setDisable(disable);
+    }
+
+    /**
+     * Executed to open a new Account using user input from the Open Account tab pane.
+     * Checks for valid inputs values and empty arguments.
+     * Checks for duplicate account, minimum balance, and money market specifications.
+     * Adds the opened account to the database.
+     */
     @FXML
     private void openAccount() {
         try {
@@ -87,10 +172,36 @@ public class Controller {
         }
     }
 
+    /**
+     * Creates an Account object based on provided parameters.
+     * Delegates to the getAccount method to initialize and return the appropriate Account instance.
+     *
+     * @param firstName    the first name of the account holder
+     * @param lastName     the last name of the account holder
+     * @param dateOfBirth  a Date object representing the birthdate of the account holder
+     * @param branch       the Branch object representing the bank branch where the account is opened
+     * @param balance      the initial balance for the account
+     * @return the created Account object
+     */
     private Account createAccount(String firstName, String lastName, Date dateOfBirth, AccountType accountType, Branch branch, double balance) {
         return getAccount(firstName, lastName, dateOfBirth, branch, accountType, balance);
     }
 
+    /**
+     * Creates and returns an Account object based on the provided parameters.
+     * Determines the account type, creates a profile for the holder, and initializes
+     * the appropriate Account subtype with the provided details.
+     * Used in the above method.
+     *
+     * @param firstName    the first name of the account holder
+     * @param lastName     the last name of the account holder
+     * @param dateOfBirth  a Date object representing the birthdate of the account holder
+     * @param branch       the Branch object representing the bank branch where the account is opened
+     * @param accountType  a String representation of the type of account to create
+     * @param balance      the initial balance to set for the account
+     * @return the created Account object, initialized based on the provided parameters
+     * @throws IllegalStateException if the provided accountType is not a valid account type
+     */
     private Account getAccount(String firstName, String lastName, Date dateOfBirth, Branch branch, AccountType accountType, double balance) {
         Profile holder = new Profile(firstName, lastName, dateOfBirth);
         return switch (accountType) {
@@ -102,6 +213,11 @@ public class Controller {
         };
     }
 
+    /**
+     * Uses the client's selection in the account type toggle group to determine the type of account they want to open.
+     *
+     * @return AccountType that represents the type of Account to be opened
+     */
     private AccountType getAccountType() {
         if(rb_checking.isSelected()) {
             return AccountType.CHECKING;
@@ -115,6 +231,22 @@ public class Controller {
         return AccountType.CD;
     }
 
+    /**
+     * Prints all the Accounts in the AccountDatabase from the beginning of AccountDatabase to the end.
+     */
+    private void print() {
+        for (int i = 0; i < accountDatabase.size(); i++) {
+            System.out.println(accountDatabase.get(i).toString());
+        }
+        resultText.appendText("*end of list.\n\n");
+    }
+
+    /**
+     * Orders and prints AccountDatabase by the 2-digit String, Branch.
+     * Bubble Sort implementation is used to iterate through the array
+     * and swap adjacent elements if they are out of order.
+     * To print, iterate through AccountDatabase and print County followed by City.
+     */
     @FXML
     private void printByBranch() {
         Sort.account(accountDatabase, 'B');
@@ -132,6 +264,12 @@ public class Controller {
         resultText.appendText("*end of list.\n\n");
     }
 
+    /**
+     * Orders and prints AccountDatabase by the name and date of birth of the account.
+     * Bubble Sort implementation is used to iterate through the array
+     * and swap adjacent elements if they are out of order.
+     * Calls the print() method.
+     */
     @FXML
     private void printByHolder() {
         resultText.appendText("\n*List of accounts ordered by account holder and number.\n");
@@ -139,13 +277,13 @@ public class Controller {
         print();
     }
 
-    private void print() {
-        for (int i = 0; i < accountDatabase.size(); i++) {
-            System.out.println(accountDatabase.get(i).toString());
-        }
-        resultText.appendText("*end of list.\n\n");
-    }
-
+    /**
+     * Orders and prints AccountDatabase by the AccountType.
+     * Bubble Sort implementation is used to iterate through the array
+     * and swap adjacent elements if they are out of order.
+     * The compareTo method referenced below compares by AccountNumber.
+     * Prints sorted by AccountType.
+     */
     @FXML
     public void printByType() {
         Sort.account(accountDatabase, 'T');
@@ -163,6 +301,10 @@ public class Controller {
         resultText.appendText("*end of list.\n\n");
     }
 
+    /**
+     * Prints the statements of all accounts in the AccountDatabase in a formatted manner.
+     * The method iterates through all accounts in the Account
+     */
     @FXML
     public void printStatements() {
         int holderCount = 0;
@@ -178,6 +320,9 @@ public class Controller {
         resultText.appendText("*end of statements.\n\n");
     }
 
+    /**
+     * Prints all the Accounts that have been closed and are in the Archive
+     */
     @FXML
     public void printArchive() {
         resultText.appendText("\n*List of closed accounts in the archive.");
