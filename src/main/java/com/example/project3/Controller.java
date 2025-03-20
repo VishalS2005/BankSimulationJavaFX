@@ -7,7 +7,15 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
+/**
+ * Controller class handles the functions in the GUI.
+ *
+ * @author Vishal Saravanan, Yining Chen
+ */
 public class Controller {
+    /**
+     * Account Database holds each account.
+     */
     public static final AccountDatabase accountDatabase = new AccountDatabase();
 
     /**
@@ -113,6 +121,17 @@ public class Controller {
     private DatePicker dob;
 
     /**
+     * Represents the minimum initial deposit required to open a Money Market account.
+     * A Money Market account cannot be created if the provided balance is below this threshold.
+     */
+    private static final double MONEY_MARKET_MINIMUM = 2000;
+
+    /**
+     * Represents the minimum balance required to open or maintain a Certificate of Deposit (CD) account
+     */
+    private static final double CD_MINIMUM = 1000;
+
+    /**
      * When the user interface is created, the program initializes the items in the combo boxes.
      */
     @FXML
@@ -128,7 +147,13 @@ public class Controller {
         at_types.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == rb_cc) {
                 disableCampusToggle(false);
+                termComboBox.setDisable(true);
+            } else if (newValue == rb_cd) {
+                termComboBox.setDisable(false);
+                disableCampusToggle(true);
+                cm_types.selectToggle(null);
             } else {
+                termComboBox.setDisable(true);
                 disableCampusToggle(true);
                 cm_types.selectToggle(null);
             }
@@ -152,23 +177,35 @@ public class Controller {
      */
     @FXML
     private void openAccount() {
+        double balanceNum = -1;
+        try { balanceNum = Double.parseDouble(balance.getText()); }
+        catch (NumberFormatException e) {
+            resultText.appendText("The following balance: \"" + balance.getText() + "\" - not a valid amount.\n");
+        }
         List<String> errors = new List<>();
         String first = firstName.getText();
         checkName(first, "First name", errors);
         String last = lastName.getText();
         checkName(last, "Last name", errors);
+        if(fieldsAreEmpty(errors)) {
+            printErrors(errors);
+            return;
+        }
+        AccountType accountType = getAccountType();
+        Branch branch = branchComboBox.getSelectionModel().getSelectedItem();
+        checkFieldsWithAccountType(accountType, errors);
         String date = dob.getValue().toString();
         String[] dateArray = date.split("-");
-        Date dateOfBirth = new Date(Integer.parseInt(dateArray[1]), Integer.parseInt(dateArray[2]), Integer.parseInt(dateArray[0]));
-        checkFields(errors);
-        AccountType accountType = getAccountType();
+        Date dateOfBirth = new Date(Integer.parseInt(dateArray[1]),
+                Integer.parseInt(dateArray[2]),
+                Integer.parseInt(dateArray[0]));
         checkDateOfBirth(accountType, dateOfBirth, errors);
-        Branch branch = branchComboBox.getSelectionModel().getSelectedItem();
-        double balanceNum;
-        try {
-            balanceNum = Double.parseDouble(balance.getText());
-        } catch (NumberFormatException e) {
-            errors.add("The following balance: \"" + balance.getText() + "\" - not a valid amount.");
+        if (accountType != AccountType.CD && accountDatabase.contains(first, last, dateOfBirth, accountType)) {
+            errors.add(first + " " + last + " already has a " + accountType + " account.\n");
+        }
+        checkBalance(balanceNum, accountType, errors);
+        if(!errors.isEmpty()) {
+            printErrors(errors);
             return;
         }
         Account account = createAccount(first, last, dateOfBirth, accountType, branch, balanceNum);
@@ -185,14 +222,14 @@ public class Controller {
      */
     private void checkName(String name, String fieldName, List<String> errors)  {
         if (name == null || name.trim().isEmpty()) {
-            errors.add(fieldName + " cannot be empty.");
+            errors.add(fieldName + " cannot be empty.\n");
             return;
         }
         if (name.matches(".*\\d.*")) { // Check if the name contains numbers
-            errors.add(fieldName + " cannot contain numbers.");
+            errors.add(fieldName + " cannot contain numbers.\n");
         }
         if (!name.matches("^[a-zA-Z\\s'-]+$")) {
-            errors.add(fieldName + " cannot contain special characters.");
+            errors.add(fieldName + " cannot contain special characters.\n");
         }
     }
 
@@ -238,16 +275,54 @@ public class Controller {
     }
 
     /**
-     * Checks the Account Type radio button toggle group, the Campus location toggle group,
-     * the Branch Combo box, and the Term Combo box.
+     * Checks the Account Type radio button toggle group and the Branch Combo box
      *
      * @param errors Collection of error messages
      */
-    private void checkFields(List<String> errors) {
+    private boolean fieldsAreEmpty(List<String> errors) {
+        boolean empty = false;
         if (at_types.getSelectedToggle() == null) {
-            errors.add("You must select an account type.");
+            errors.add("You must select an account type.\n");
+            empty = true;
         } else if (branchComboBox.getSelectionModel().getSelectedItem() == null) {
-            errors.add("You must select a branch.");
+            errors.add("You must select a branch.\n");
+            empty = true;
+        }
+        return empty;
+    }
+
+    /**
+     * Checks if balance of the Account being opened is valid.
+     * A starting balance of 0 or less is invalid.
+     * A Money Market Account with less than 2000 is invalid.
+     *
+     * @param balance  value of money stored in Account being opened
+     * @param acctType type of Account being opened
+     * @param errors collection of error messages
+     */
+    private void checkBalance(double balance, AccountType acctType, List<String> errors) {
+        if (balance <= 0) { //balance must be more than 0
+            errors.add("Initial deposit cannot be 0 or negative.\n");
+        } else if (balance < MONEY_MARKET_MINIMUM && acctType.equals(AccountType.MONEY_MARKET)) { //Money Market account must have at least $2000
+            errors.add("Minimum of $2,000 to open a Money Market account.\n");
+        } else if (balance < CD_MINIMUM && acctType.equals(AccountType.CD)) {
+            errors.add("Minimum of $1,000 to open a Certificate Deposit account.\n");
+        }
+    }
+
+    /**
+     * Checks the Campus location toggle group and the Term Combo box which depend on the Account Type.
+     *
+     * @param errors Collection of error messages
+     * @param acctType type of Account being opened
+     */
+    private void checkFieldsWithAccountType(AccountType acctType, List<String> errors) {
+        if (acctType == AccountType.CD &&
+                termComboBox.getSelectionModel().getSelectedItem() == null) {
+            errors.add("You must select a term to open a Certificate Deposit type.\n");
+        } else if (acctType == AccountType.COLLEGE_CHECKING &&
+                cm_types.getSelectedToggle() == null) {
+            errors.add("You must select a campus to open a College Checking account.\n");
         }
     }
 
@@ -261,11 +336,11 @@ public class Controller {
      */
     private void checkDateOfBirth(AccountType accountType, Date dob, List<String> errors) {
         if (dob.isAfterToday()) {
-            errors.add("DOB invalid: " + dob + " cannot be today or a future day.");
+            errors.add("DOB invalid: " + dob + " cannot be today or a future day.\n");
         } else if (!dob.isEighteen()) {
-            errors.add("Not eligible to open: " + dob + " under 18.");
+            errors.add("Not eligible to open: " + dob + " under 18.\n");
         } else if (accountType == AccountType.COLLEGE_CHECKING && !dob.isOverTwentyFour()) {
-            errors.add("Not eligible to open: " + dob + " over 24.");
+            errors.add("Not eligible to open: " + dob + " over 24.\n");
         }
     }
 
@@ -288,11 +363,24 @@ public class Controller {
     }
 
     /**
+     * Prints the collection of errors if there are any.
+     */
+    private void printErrors(List<String> errors) {
+       if (!errors.isEmpty()) {
+           for (int i = 0; i < errors.size(); i++) {
+               resultText.appendText(errors.get(i));
+           }
+           resultText.appendText("Please provide necessary information and click " +
+                   "the \"open\" button once again.\n\n");
+       }
+    }
+
+    /**
      * Prints all the Accounts in the AccountDatabase from the beginning of AccountDatabase to the end.
      */
     private void print() {
         for (int i = 0; i < accountDatabase.size(); i++) {
-            System.out.println(accountDatabase.get(i).toString());
+            resultText.appendText(accountDatabase.get(i).toString());
         }
         resultText.appendText("*end of list.\n\n");
     }

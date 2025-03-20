@@ -109,7 +109,7 @@
                                                       <Insets left="10.0" />
                                                    </HBox.margin>
                                                 </Label>
-                                                <RadioButton fx:id="rb_nb" disable="true" mnemonicParsing="false" selected="true" text="New Brunswick">
+                                                <RadioButton fx:id="rb_nb" disable="true" mnemonicParsing="false" text="New Brunswick">
                                                    <toggleGroup>
                                                       <ToggleGroup fx:id="cm_types" />
                                                    </toggleGroup>
@@ -130,19 +130,6 @@
                                                       <Insets left="10.0" />
                                                    </HBox.margin>
                                                 </ComboBox>
-                                                <Label text="Date Open">
-                                                   <HBox.margin>
-                                                      <Insets left="10.0" />
-                                                   </HBox.margin>
-                                                </Label>
-                                                <DatePicker promptText="date open">
-                                                   <opaqueInsets>
-                                                      <Insets />
-                                                   </opaqueInsets>
-                                                   <HBox.margin>
-                                                      <Insets left="10.0" />
-                                                   </HBox.margin>
-                                                </DatePicker>
                                              </children>
                                           </HBox>
                                        </children>
