@@ -109,7 +109,7 @@
                                                       <Insets left="10.0" />
                                                    </HBox.margin>
                                                 </Label>
-                                                <RadioButton fx:id="rb_nb" disable="true" mnemonicParsing="false" text="New Brunswick">
+                                                <RadioButton fx:id="rb_nb" disable="true" mnemonicParsing="false" selected="true" text="New Brunswick">
                                                    <toggleGroup>
                                                       <ToggleGroup fx:id="cm_types" />
                                                    </toggleGroup>

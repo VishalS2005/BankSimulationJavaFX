@@ -1,13 +1,11 @@
 package com.example.project3;
 
 import com.example.project3.banking.*;
-import com.example.project3.util.Sort;
+import com.example.project3.util.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import com.example.project3.banking.AccountDatabase;
-import com.example.project3.util.Date;
 
 public class Controller {
     public static final AccountDatabase accountDatabase = new AccountDatabase();
@@ -103,10 +101,10 @@ public class Controller {
     private ComboBox<Branch> branchComboBox;
 
     /**
-     * Drop down that represents the term of a year.
+     * Drop down that represents the term of a year for Certificate Deposit Account.
      */
     @FXML
-    private ComboBox<Integer> termComboBox; // Make sure to link this with your ComboBox in FXML
+    private ComboBox<Integer> termComboBox;
 
     /**
      * Date picker that represents the date of birth of a client.
@@ -154,21 +152,47 @@ public class Controller {
      */
     @FXML
     private void openAccount() {
+        List<String> errors = new List<>();
+        String first = firstName.getText();
+        checkName(first, "First name", errors);
+        String last = lastName.getText();
+        checkName(last, "Last name", errors);
+        String date = dob.getValue().toString();
+        String[] dateArray = date.split("-");
+        Date dateOfBirth = new Date(Integer.parseInt(dateArray[1]), Integer.parseInt(dateArray[2]), Integer.parseInt(dateArray[0]));
+        checkFields(errors);
+        AccountType accountType = getAccountType();
+        checkDateOfBirth(accountType, dateOfBirth, errors);
+        Branch branch = branchComboBox.getSelectionModel().getSelectedItem();
+        double balanceNum;
         try {
-            String first = firstName.getText();
-            String last = lastName.getText();
-            String date = dob.getValue().toString();
-            String[] dateArray = date.split("-");
-            Date dateOfBirth = new Date(Integer.parseInt(dateArray[1]), Integer.parseInt(dateArray[2]), Integer.parseInt(dateArray[0]));
-            AccountType accountType = getAccountType();
-            Branch branch = branchComboBox.getSelectionModel().getSelectedItem();
-            double balance = Double.parseDouble(this.balance.getText());
-            Account account = createAccount(first, last, dateOfBirth, accountType, branch, balance);
-            accountDatabase.add(account);
-            resultText.appendText(account.getAccountNumber().getType() + " account " + account.getAccountNumber() + " has been opened.");
+            balanceNum = Double.parseDouble(balance.getText());
+        } catch (NumberFormatException e) {
+            errors.add("The following balance: \"" + balance.getText() + "\" - not a valid amount.");
+            return;
+        }
+        Account account = createAccount(first, last, dateOfBirth, accountType, branch, balanceNum);
+        accountDatabase.add(account);
+        resultText.appendText(account.getAccountNumber().getType() + " account " + account.getAccountNumber() + " has been opened.");
+    }
 
-        } catch (NullPointerException e) {
-            resultText.appendText("Missing data tokens for opening an account.\n");
+    /**
+     * Checks a string for a number.
+     *
+     * @param name input string
+     * @param fieldName specifies whether first or last name
+     * @param errors Collection of error messages
+     */
+    private void checkName(String name, String fieldName, List<String> errors)  {
+        if (name == null || name.trim().isEmpty()) {
+            errors.add(fieldName + " cannot be empty.");
+            return;
+        }
+        if (name.matches(".*\\d.*")) { // Check if the name contains numbers
+            errors.add(fieldName + " cannot contain numbers.");
+        }
+        if (!name.matches("^[a-zA-Z\\s'-]+$")) {
+            errors.add(fieldName + " cannot contain special characters.");
         }
     }
 
@@ -211,6 +235,38 @@ public class Controller {
             case COLLEGE_CHECKING -> new CollegeChecking(branch, AccountType.COLLEGE_CHECKING, holder, balance);
             case CD -> new CertificateDeposit(branch, AccountType.CD, holder, balance);
         };
+    }
+
+    /**
+     * Checks the Account Type radio button toggle group, the Campus location toggle group,
+     * the Branch Combo box, and the Term Combo box.
+     *
+     * @param errors Collection of error messages
+     */
+    private void checkFields(List<String> errors) {
+        if (at_types.getSelectedToggle() == null) {
+            errors.add("You must select an account type.");
+        } else if (branchComboBox.getSelectionModel().getSelectedItem() == null) {
+            errors.add("You must select a branch.");
+        }
+    }
+
+    /**
+     * Checks a Date object if the birthdate provided is after the current date,
+     * or if the birthdate provided indicates that the person is 18 years old.
+     *
+     * @param dob Date object which represents the date of birth
+     * @param accountType AccountType object which represents the type of Account
+     * false otherwise
+     */
+    private void checkDateOfBirth(AccountType accountType, Date dob, List<String> errors) {
+        if (dob.isAfterToday()) {
+            errors.add("DOB invalid: " + dob + " cannot be today or a future day.");
+        } else if (!dob.isEighteen()) {
+            errors.add("Not eligible to open: " + dob + " under 18.");
+        } else if (accountType == AccountType.COLLEGE_CHECKING && !dob.isOverTwentyFour()) {
+            errors.add("Not eligible to open: " + dob + " over 24.");
+        }
     }
 
     /**
