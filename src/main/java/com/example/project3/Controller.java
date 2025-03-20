@@ -206,8 +206,21 @@ public class Controller {
     @FXML
     private void openAccount() {
         AccountType accountType = getAccountType();
+
         Branch branch = branchComboBox.getSelectionModel().getSelectedItem();
+
+        if(branch == null) {
+            resultText.appendText("Select Branch\n");
+            return;
+        }
+        if(dob.getValue() == null) {
+            resultText.appendText("Date input Invalid\n");
+            return;
+        }
+
         Date dateOfBirth = getDOB();
+
+        if (!checkDateOfBirth(accountType, dateOfBirth)) { return; }
         String first = firstName.getText();
         String last = lastName.getText();
 
@@ -223,8 +236,10 @@ public class Controller {
         checkBalance(balanceNum, accountType);
         Account account = createAccount(first, last, dateOfBirth, accountType, branch, balanceNum);
         accountDatabase.add(account);
-        resultText.appendText(account.getAccountNumber().getType() + " account " + account.getAccountNumber() + " has been opened.");
+        resultText.appendText(account.getAccountNumber().getType() + " account " + account.getAccountNumber() + " has been opened.\n");
     }
+
+
 
     private Date getDOB() {
         String date = dob.getValue().toString();
@@ -232,6 +247,22 @@ public class Controller {
         return new Date(Integer.parseInt(dateArray[1]),
                 Integer.parseInt(dateArray[2]),
                 Integer.parseInt(dateArray[0]));
+    }
+    private boolean checkDateOfBirth(AccountType accountType, Date dob) {
+        if (!dob.isValid()) {
+            resultText.appendText("DOB invalid: " + dob + " not a valid calendar date!\n");
+            return false;
+        } else if (dob.isAfterToday()) {
+            resultText.appendText("DOB invalid: " + dob + " cannot be today or a future day.\n");
+            return false;
+        } else if (!dob.isEighteen()) {
+            resultText.appendText("Not eligible to open: " + dob + " under 18.\n");
+            return false;
+        } else if (accountType == AccountType.COLLEGE_CHECKING && !dob.isOverTwentyFour()) {
+            resultText.appendText("Not eligible to open: " + dob + " over 24.\n");
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -315,22 +346,7 @@ public class Controller {
         }
     }
 
-    /**
-     * Checks the Account Type radio button toggle group and the Branch Combo box
-     *
-     * @param errors Collection of error messages
-     */
-    private boolean fieldsAreEmpty(List<String> errors) {
-        boolean empty = false;
-        if (at_types.getSelectedToggle() == null) {
-            errors.add("You must select an account type.\n");
-            empty = true;
-        } else if (branchComboBox.getSelectionModel().getSelectedItem() == null) {
-            errors.add("You must select a branch.\n");
-            empty = true;
-        }
-        return empty;
-    }
+
 
     /**
      * Checks if balance of the Account being opened is valid.
@@ -350,39 +366,7 @@ public class Controller {
         }
     }
 
-    /**
-     * Checks the Campus location toggle group and the Term Combo box which depend on the Account Type.
-     *
-     * @param errors Collection of error messages
-     * @param acctType type of Account being opened
-     */
-    private void checkFieldsWithAccountType(AccountType acctType, List<String> errors) {
-        if (acctType == AccountType.CD &&
-                termComboBox.getSelectionModel().getSelectedItem() == null) {
-            errors.add("You must select a term to open a Certificate Deposit type.\n");
-        } else if (acctType == AccountType.COLLEGE_CHECKING &&
-                cm_types.getSelectedToggle() == null) {
-            errors.add("You must select a campus to open a College Checking account.\n");
-        }
-    }
 
-    /**
-     * Checks a Date object if the birthdate provided is after the current date,
-     * or if the birthdate provided indicates that the person is 18 years old.
-     *
-     * @param dob Date object which represents the date of birth
-     * @param accountType AccountType object which represents the type of Account
-     * false otherwise
-     */
-    private void checkDateOfBirth(AccountType accountType, Date dob, List<String> errors) {
-        if (dob.isAfterToday()) {
-            errors.add("DOB invalid: " + dob + " cannot be today or a future day.\n");
-        } else if (!dob.isEighteen()) {
-            errors.add("Not eligible to open: " + dob + " under 18.\n");
-        } else if (accountType == AccountType.COLLEGE_CHECKING && !dob.isOverTwentyFour()) {
-            errors.add("Not eligible to open: " + dob + " over 24.\n");
-        }
-    }
 
     /**
      * Uses the client's selection in the account type toggle group to determine the type of account they want to open.
@@ -523,7 +507,6 @@ public class Controller {
     @FXML
     private void loadAccounts() throws FileNotFoundException {
 
-        resultText.appendText("Accounts in \"accounts.txt\" loaded to the database.\n");
         FileChooser fileChooser = new FileChooser();
 
         File file = fileChooser.showOpenDialog(stage);
@@ -540,6 +523,7 @@ public class Controller {
             accountDatabase.add(account);
         }
 
+        resultText.appendText("Accounts in \"" + file + "\" loaded to the database.\n");
     }
 
     public static Account createAccount(String[] commandArray) {
@@ -600,8 +584,8 @@ public class Controller {
                 continue;
             }
             String[] parts = line.split(",");
-            Date date = TransactionManager.createDate(parts[2]);
-            Branch branch = TransactionManager.createBranch(parts[3]);
+            Date date = createDate(parts[2]);
+            Branch branch = createBranch(parts[3]);
             char type = parts[0].charAt(0);
             double amount = Double.parseDouble(parts[4]);
             Activity activity = new Activity(date, branch, type, amount, true);
