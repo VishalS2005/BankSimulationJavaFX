@@ -40,17 +40,5 @@ public class Archive {
         return first;
     }
 
-    /**
-     * Traverses through the linked list, first, and prints each account.
-     * Every Account Number, Holder, and Balance of the Account are printed from the Archive.
-     */
-    public void print() {
-        System.out.println("\n*List of closed accounts in the archive.");
-        AccountNode current = first;
-        while (current != null) {
-            System.out.println(current);
-            current = current.getNext();
-        }
-        System.out.println("*end of list.\n");
-    }
+
 }

@@ -1,5 +1,7 @@
 package com.example.project3.banking;
 
+import com.example.project3.Controller;
+
 /**
  * Extends the account class
  *
@@ -43,7 +45,7 @@ public class Savings extends Account {
      */
     public Savings(Branch branch, AccountType type, Profile holder, double balance) {
         super(branch, type, holder, balance);
-        isLoyal = TransactionManager.accountDatabase.contains(holder, AccountType.CHECKING);
+        isLoyal = Controller.accountDatabase.contains(holder, AccountType.CHECKING);
     }
 
     /**
