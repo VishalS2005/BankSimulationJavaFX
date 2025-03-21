@@ -17,22 +17,39 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 /**
- * Controller class handles the functions in the GUI.
+ * Controller class handles functionality in the GUI.
+ * The first tab allows a client to open an account.
+ * The second tab allows a client to deposit/withdraw/close and account.
+ * The third tab allows for management of Account activities including reading in files and printing Accounts.
  *
  * @author Vishal Saravanan, Yining Chen
  */
 public class Controller {
+
     /**
      * Account Database holds each account.
      */
     public static final AccountDatabase accountDatabase = new AccountDatabase();
 
+    /**
+     * Formats numbers for easy readability.
+     */
     private static final DecimalFormat df = new DecimalFormat("#,##0.00");
 
+    /**
+     * Represents the decimal value for ten percent, used to calculate a percentage or ratio.
+     * Typically employed in financial calculations or percentage adjustments throughout the system.
+     */
     private static final double TEN_PERCENT = 0.1;
 
+    /**
+     * Amount of days in one year is 365.
+     */
     private static final double DAYS_IN_YEAR = 365;
 
+    /**
+     * Initialization of a Stage variable that will hold the components of the GUI.
+     */
     public Stage stage;
 
     /**
@@ -137,11 +154,11 @@ public class Controller {
     @FXML
     private DatePicker dob;
 
+    /**
+     * For a CD account, the Date Picker is added such that we could specify the Date the Account is opened.
+     */
     @FXML
     private DatePicker openDate;
-
-    @FXML
-    private CheckBox loyal;
 
     /**
      * Text field that takes in Account Number of holder.
@@ -221,7 +238,6 @@ public class Controller {
         branchComboBox.setItems(branchList);
         rb_checking.setSelected(true);
         disableCampusToggle(true);
-        loyal.setDisable(true);
         termComboBox.setDisable(true);
         openDate.setDisable(true);
         branchComboBox.setEditable(false);
@@ -230,26 +246,22 @@ public class Controller {
             if (newValue == rb_checking) {
                 disableCampusToggle(true);
                 termComboBox.setDisable(true);
-                loyal.setDisable(true);
                 openDate.setDisable(true);
             }
             else if (newValue == rb_cc) {
                 disableCampusToggle(false);
                 termComboBox.setDisable(true);
-                loyal.setDisable(true);
                 openDate.setDisable(true);
                 rb_nb.setSelected(true);
             } else if (newValue == rb_cd) {
                 termComboBox.setDisable(false);
                 disableCampusToggle(true);
                 cm_types.selectToggle(null);
-                loyal.setDisable(true);
                 openDate.setDisable(false);
             } else {
                 termComboBox.setDisable(true);
                 disableCampusToggle(true);
                 cm_types.selectToggle(null);
-                loyal.setDisable(false);
                 openDate.setDisable(true);
             }
         });
@@ -312,8 +324,12 @@ public class Controller {
         clearArgumentsOpen();
     }
 
-
-
+    /**
+     * Initializes a Date object based on the date chosen in DatePicker.
+     *
+     * @param datePicker DatePicker date that needs to changed to Date object
+     * @return Date object that represents the date of birth of a holder
+     */
     private Date getDate(DatePicker datePicker) {
         String date = datePicker.getValue().toString();
         String[] dateArray = date.split("-");
@@ -322,6 +338,15 @@ public class Controller {
                 Integer.parseInt(dateArray[0]));
     }
 
+    /**
+     * Helper method that checks the validity of a Date.
+     * Checks for a valid date, whether the date is after today, whether the holder is 18,
+     * and whether a College Checking Account holder is between the age 18-24.
+     *
+     * @param accountType AccountType object that represents type of Account
+     * @param dob Date object that represents date of birth
+     * @return true if valid date, false otherwise
+     */
     private boolean checkDateOfBirth(AccountType accountType, Date dob) {
         if (!dob.isValid()) {
             resultText.appendText("DOB invalid: " + dob + " not a valid calendar date!\n");
@@ -338,28 +363,6 @@ public class Controller {
         }
         return true;
     }
-
-    /**
-     * Checks a string for a number.
-     *
-     * @param name input string
-     * @param fieldName specifies whether first or last name
-     * @param errors Collection of error messages
-     */
-    private void checkName(String name, String fieldName, List<String> errors)  {
-        if (name == null || name.trim().isEmpty()) {
-            errors.add(fieldName + " cannot be empty.\n");
-            return;
-        }
-        if (name.matches(".*\\d.*")) { // Check if the name contains numbers
-            errors.add(fieldName + " cannot contain numbers.\n");
-        }
-        if (!name.matches("^[a-zA-Z\\s'-]+$")) {
-            errors.add(fieldName + " cannot contain special characters.\n");
-        }
-    }
-
-
 
     /**
      * Creates and returns an Account object based on the provided parameters.
@@ -387,8 +390,11 @@ public class Controller {
         };
     }
 
-
-
+    /**
+     * Helper method that returns a Campus object based on user selection.
+     *
+     * @return Campus object for College Checking Account
+     */
     private Campus getCampus() {
         if(rb_nb.isSelected()) {
             return Campus._1;
@@ -401,7 +407,13 @@ public class Controller {
         }
     }
 
-
+    /**
+     * Checks whether the balance of an account is valid.
+     *
+     * @param balance double value that represents the balance
+     * @param acctType AccountType object that represents type of Account
+     * @return true if valid balance for the AccountType, false otherwise
+     */
     private boolean checkBalance(double balance, AccountType acctType) {
         if (balance <= 0) { //balance must be more than 0
             resultText.appendText("Initial deposit cannot be 0 or negative.\n");
@@ -432,19 +444,6 @@ public class Controller {
             return AccountType.MONEY_MARKET;
         }
         return AccountType.CD;
-    }
-
-    /**
-     * Prints the collection of errors if there are any.
-     */
-    private void printErrors(List<String> errors) {
-       if (!errors.isEmpty()) {
-           for (int i = 0; i < errors.size(); i++) {
-               resultText.appendText(errors.get(i));
-           }
-           resultText.appendText("Please provide necessary information and click " +
-                   "the \"open\" button once again.\n\n");
-       }
     }
 
     /**
@@ -552,6 +551,11 @@ public class Controller {
         resultText.appendText("*end of list.\n\n");
     }
 
+    /**
+     * Opens a file and reads in the Accounts provided in the file.
+     *
+     * @throws FileNotFoundException error that will be thrown if there are issues finding file
+     */
     @FXML
     private void loadAccounts() throws FileNotFoundException {
         try {
@@ -576,6 +580,12 @@ public class Controller {
         }
     }
 
+    /**
+     * Helper method for loadAccounts() that will create an Account based on input from a File.
+     *
+     * @param commandArray a String array representation of the information of an Account
+     * @return Account object that can later be added to the AccountDatabase
+     */
     public Account createAccount(String[] commandArray) {
         String accountType = commandArray[0];
         Branch branch = createBranch(commandArray[1]); //second input is the Branch
@@ -586,6 +596,13 @@ public class Controller {
         return getAccount(commandArray, firstName, lastName, dateOfBirth, branch, accountType, amount);
     }
 
+    /**
+     * Helper method for createAccount()/processActivities()
+     * that will create a Branch object based on String input.
+     *
+     * @param branchName name of Branch where holder wants to use Account
+     * @return Branch object which represents location of branch
+     */
     public Branch createBranch(String branchName) {
         Branch branch = null;
         try {
@@ -596,6 +613,12 @@ public class Controller {
         return branch;
     }
 
+    /**
+     * Creates a Date object based on a String input for File implementations.
+     *
+     * @param date String separated by '/' that represents date of birth
+     * @return Date object that represents date of birth
+     */
     public Date createDate(String date) {
         String[] dateParts = date.split("/");
         int month = Integer.parseInt(dateParts[0]);
@@ -604,6 +627,20 @@ public class Controller {
         return new Date(month, day, year);
     }
 
+    /**
+     * Creates and returns an Account object based on the provided parameters.
+     * The type of account created depends on the `accountType` parameter.
+     *
+     * @param commandArray strings containing additional command arguments
+     * @param firstName first name of the account holder
+     * @param lastName last name of the account holder
+     * @param dateOfBirth date of birth of the account holder
+     * @param branch branch where the account is held
+     * @param accountType type of account to create
+     * @param balance initial balance of the account
+     * @return Account object corresponding to the specified account type
+     * @throws IllegalStateException If the `accountType` does not match any known account type
+     */
     private Account getAccount(String[] commandArray, String firstName, String lastName, Date dateOfBirth, Branch branch, String accountType, double balance) {
         Profile holder = new Profile(firstName, lastName, dateOfBirth);
         accountType = accountType.toLowerCase();
@@ -620,6 +657,13 @@ public class Controller {
         };
     }
 
+    /**
+     * Processes account activities from a file selected by the user.
+     * The file is expected to contain lines of activity data in a specific format.
+     * Each line is parsed, and the corresponding account activity (deposit or withdrawal) is processed.
+     *
+     * @throws IOException if an input/output error occurs while reading the file
+     */
     @FXML
     public void processActivities() throws IOException {
         try {
@@ -658,6 +702,9 @@ public class Controller {
         }
     }
 
+    /**
+     * Takes in arguments from user and uses it to close an Account.
+     */
     @FXML
     private void closeSingleAccount() {
         try {
@@ -683,7 +730,12 @@ public class Controller {
         }
     }
 
-
+    /**
+     * Finds the amount of interest accumulated for an Account.
+     *
+     * @param account Account object that represents holder's Account
+     * @param closeDate Date object that represents when an Account was closed
+     */
     private void printInterest(Account account, Date closeDate) {
         double interestRate;
         resultText.appendText("interest earned: $\n");
@@ -710,8 +762,9 @@ public class Controller {
         }
     }
 
-
-
+    /**
+     * Closes all Accounts for a holder based on first/last name and date of birth.
+     */
     @FXML
     private void closeMultipleAccounts() {
             String firstName = this.dwc_firstName.getText();
@@ -746,8 +799,14 @@ public class Controller {
             clearArgumentsClose();
     }
 
-
-
+    /**
+     * Finds and returns a list of all accounts associated with a given account holder.
+     * The method iterates through the AccountDatabase and checks if the holder of each account
+     * matches the provided holder's Profile.
+     *
+     * @param holder the profile of the account holder whose accounts are to be found
+     * @return a list of accounts associated with the given holder
+     */
     private List<Account> findAllAccounts(Profile holder) {
         List<Account> accounts = new List<>();
         for (int i = 0; i < accountDatabase.size(); i++) {
@@ -758,8 +817,16 @@ public class Controller {
         return accounts;
     }
 
-
-
+    /**
+     * Handles the withdrawal of money from an account.
+     * The method validates the withdrawal amount and account number, checks for sufficient funds,
+     * and updates the account balance if the withdrawal is successful.
+     * If the account is a Money Market account, it ensures the balance does not fall below the minimum required.
+     *
+     * @throws StringIndexOutOfBoundsException if the account number is invalid
+     * @throws NullPointerException if the account number is null or invalid
+     * @throws NumberFormatException if the withdrawal amount is not a valid number
+     */
     @FXML
     private void withdrawMoney() {
         try {
@@ -798,7 +865,14 @@ public class Controller {
         }
     }
 
-
+    /**
+     * Handles the deposit of money into an account.
+     * The method validates the deposit amount and account number, and updates the account balance if the deposit is successful.
+     *
+     * @throws StringIndexOutOfBoundsException if the account number is invalid
+     * @throws NullPointerException if the account number is null or invalid
+     * @throws NumberFormatException if the deposit amount is not a valid number
+     */
     @FXML
     private void depositMoney() {
         try {
@@ -822,6 +896,10 @@ public class Controller {
         }
     }
 
+    /**
+     * Clears all input fields and resets the UI components related to opening a new account.
+     * This method is typically called to reset the form after an account is opened or when the user cancels the operation.
+     */
     @FXML
     private void clearArgumentsOpen() {
         initialize();
@@ -830,14 +908,19 @@ public class Controller {
         dob.getEditor().clear();
         balance.clear();
         openDate.getEditor().clear();
-        loyal.setSelected(false);
         rb_nb.setSelected(false);
         rb_cam.setSelected(false);
         rb_nw.setSelected(false);
         branchComboBox.setValue(null);
+        branchComboBox.setPromptText("Branch");
         termComboBox.setValue(null);
+        termComboBox.setPromptText("Term");
     }
 
+    /**
+     * Clears all input fields and resets the UI components related to closing an account.
+     * This method is typically called to reset the form after an account is closed or when the user cancels the operation.
+     */
     @FXML
     private void clearArgumentsClose() {
         dwc_amount.clear();
@@ -846,7 +929,6 @@ public class Controller {
         dwc_dob.getEditor().clear();
         dwc_firstName.clear();
         dwc_lastName.clear();
-
     }
 }
 

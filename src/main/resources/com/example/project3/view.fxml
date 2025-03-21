@@ -39,8 +39,8 @@
                                     <TextField fx:id="balance" promptText="Enter the amount" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                                     <GridPane GridPane.columnIndex="1" GridPane.rowIndex="3">
                                       <columnConstraints>
-                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="278.0" minWidth="10.0" prefWidth="229.0" />
-                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="400.19999999999993" minWidth="10.0" prefWidth="339.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="278.0" minWidth="10.0" prefWidth="243.6" />
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="400.19999999999993" minWidth="10.0" prefWidth="323.19999999999993" />
                                       </columnConstraints>
                                       <rowConstraints>
                                         <RowConstraints maxHeight="63.4" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
@@ -62,13 +62,16 @@
                                              </GridPane.margin></RadioButton>
                                           <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="2">
                                              <children>
-                                                <RadioButton fx:id="rb_savings" mnemonicParsing="false" prefHeight="18.0" prefWidth="109.0" text="Savings" toggleGroup="$at_types">
+                                                <RadioButton fx:id="rb_savings" mnemonicParsing="false" prefHeight="18.0" prefWidth="99.0" text="Savings" toggleGroup="$at_types">
                                                    <HBox.margin>
                                                       <Insets />
-                                                   </HBox.margin></RadioButton>
+                                                   </HBox.margin>
+                                                   <padding>
+                                                      <Insets left="10.0" />
+                                                   </padding></RadioButton>
                                                 <RadioButton fx:id="rb_mm" mnemonicParsing="false" text="Money Market" toggleGroup="$at_types">
                                                    <HBox.margin>
-                                                      <Insets left="7.0" />
+                                                      <Insets />
                                                    </HBox.margin></RadioButton>
                                              </children>
                                           </HBox>
@@ -99,15 +102,8 @@
                                                       <ToggleGroup fx:id="cm_types" />
                                                    </toggleGroup>
                                                 </RadioButton>
-                                                <RadioButton fx:id="rb_nw" disable="true" mnemonicParsing="false" text="Newark" toggleGroup="$cm_types" />
-                                                <RadioButton fx:id="rb_cam" contentDisplay="CENTER" disable="true" mnemonicParsing="false" text="Camden" toggleGroup="$cm_types" />
                                              </children>
                                           </HBox>
-                                          <CheckBox fx:id="loyal" disable="true" mnemonicParsing="false" text="Loyal Customer" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                                             <GridPane.margin>
-                                                <Insets left="10.0" />
-                                             </GridPane.margin>
-                                          </CheckBox>
                                           <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                                              <children>
                                                 <ComboBox fx:id="termComboBox" prefHeight="26.0" prefWidth="83.0" promptText="Term">
@@ -134,6 +130,19 @@
                                                       <Insets />
                                                    </HBox.margin>
                                                 </DatePicker>
+                                             </children>
+                                          </HBox>
+                                          <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                             <children>
+                                                <RadioButton fx:id="rb_cam" contentDisplay="CENTER" disable="true" mnemonicParsing="false" text="Camden" toggleGroup="$cm_types">
+                                                   <HBox.margin>
+                                                      <Insets left="35.0" />
+                                                   </HBox.margin></RadioButton>
+                                                <RadioButton fx:id="rb_nw" disable="true" mnemonicParsing="false" text="Newark" toggleGroup="$cm_types">
+                                                   <HBox.margin>
+                                                      <Insets left="30.0" />
+                                                   </HBox.margin>
+                                                </RadioButton>
                                              </children>
                                           </HBox>
                                        </children>
