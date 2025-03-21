@@ -136,6 +136,59 @@ public class Controller {
     @FXML
     private CheckBox loyal;
 
+    /**
+     * Text field that takes in Account Number of holder.
+     */
+    @FXML
+    private TextField dwc_accnum;
+
+    /**
+     * Text field that takes in amount to be deposited or withdrawn.
+     */
+    @FXML
+    private TextField dwc_amount;
+
+    /**
+     * Text field that takes in first name of holder.
+     */
+    @FXML
+    private TextField dwc_firstName;
+
+    /**
+     * Text field that takes in last name of holder.
+     */
+    @FXML
+    private TextField dwc_lastName;
+
+    /**
+     * Button used to deposit money into an Account.
+     */
+    @FXML
+    private Button dwc_deposit;
+
+    /**
+     * Button used to deposit money into an Account.
+     */
+    @FXML
+    private Button dwc_withdraw;
+
+    /**
+     * Button used to close all accounts associated with a Profile.
+     */
+    @FXML
+    private Button dwc_closeAll;
+
+    /**
+     * Date picker where holder chooses the date they close the Account.
+     */
+    @FXML
+    private DatePicker dwc_dateClose;
+
+    /**
+     * Date picker where holder chooses the date they were born.
+     */
+    @FXML
+    private DatePicker dwc_dob;
 
 
     /**
@@ -248,6 +301,7 @@ public class Controller {
                 Integer.parseInt(dateArray[2]),
                 Integer.parseInt(dateArray[0]));
     }
+
     private boolean checkDateOfBirth(AccountType accountType, Date dob) {
         if (!dob.isValid()) {
             resultText.appendText("DOB invalid: " + dob + " not a valid calendar date!\n");
