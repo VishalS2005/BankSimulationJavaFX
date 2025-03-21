@@ -147,7 +147,7 @@
                      </children></AnchorPane>
             </content>
           </Tab>
-            <Tab fx:id="dwc_accnum" text="Deposit/Withdraw/Close">
+            <Tab text="Deposit/Withdraw/Close">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
@@ -216,7 +216,7 @@
                                     <Label alignment="CENTER" text="Date of Birth:   " />
                                  </children>
                               </HBox>
-                              <TextField prefHeight="26.0" prefWidth="246.0" promptText="9-digit number" GridPane.columnIndex="1" />
+                              <TextField fx:id="dwc_accnum" prefHeight="26.0" prefWidth="246.0" promptText="9-digit number" GridPane.columnIndex="1" />
                               <TextField fx:id="dwc_amount" promptText="Enter amount" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                               <TextField fx:id="dwc_firstName" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                               <TextField fx:id="dwc_lastName" GridPane.columnIndex="1" GridPane.rowIndex="5" />

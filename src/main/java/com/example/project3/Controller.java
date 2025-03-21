@@ -190,7 +190,6 @@ public class Controller {
     @FXML
     private DatePicker dwc_dob;
 
-
     /**
      * Represents the minimum initial deposit required to open a Money Market account.
      * A Money Market account cannot be created if the provided balance is below this threshold.
