@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane prefHeight="750.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.project3.Controller">
+<BorderPane prefHeight="750.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.project3.Controller">
    <center>
       <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
         <tabs>
@@ -87,7 +87,7 @@
                                                    </opaqueInsets>
                                                 </HBox>
                                              </children></HBox>
-                                          <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                          <HBox alignment="CENTER_LEFT" prefHeight="63.0" prefWidth="359.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                              <children>
                                                 <Label alignment="CENTER" prefHeight="16.0" prefWidth="91.0" text="Campus:">
                                                    <HBox.margin>
@@ -110,11 +110,30 @@
                                           </CheckBox>
                                           <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                                              <children>
-                                                <ComboBox fx:id="termComboBox" prefHeight="26.0" prefWidth="115.0" promptText="Term">
+                                                <ComboBox fx:id="termComboBox" prefHeight="26.0" prefWidth="83.0" promptText="Term">
                                                    <HBox.margin>
                                                       <Insets left="10.0" />
                                                    </HBox.margin>
+                                                   <opaqueInsets>
+                                                      <Insets />
+                                                   </opaqueInsets>
                                                 </ComboBox>
+                                                <Label prefHeight="17.0" prefWidth="90.0" text="Date Open">
+                                                   <HBox.margin>
+                                                      <Insets />
+                                                   </HBox.margin>
+                                                   <opaqueInsets>
+                                                      <Insets />
+                                                   </opaqueInsets>
+                                                   <padding>
+                                                      <Insets left="20.0" />
+                                                   </padding>
+                                                </Label>
+                                                <DatePicker fx:id="openDate" prefHeight="25.0" prefWidth="128.0" promptText="date open">
+                                                   <HBox.margin>
+                                                      <Insets />
+                                                   </HBox.margin>
+                                                </DatePicker>
                                              </children>
                                           </HBox>
                                        </children>
@@ -133,7 +152,7 @@
                                                 <Insets left="50.0" />
                                              </HBox.margin>
                                           </Button>
-                                          <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="137.0" text="Clear">
+                                          <Button mnemonicParsing="false" onAction="#clearArgumentsOpen" prefHeight="26.0" prefWidth="137.0" text="Clear">
                                              <HBox.margin>
                                                 <Insets left="50.0" />
                                              </HBox.margin>
@@ -144,7 +163,6 @@
                               </GridPane>
                            </children>
                         </HBox>
-                        <TextArea fx:id="resultText" layoutX="14.0" layoutY="505.0" prefHeight="200.0" prefWidth="674.0" />
                      </children></AnchorPane>
             </content>
           </Tab>
@@ -173,14 +191,14 @@
                                  <children>
                                     <HBox alignment="CENTER_LEFT" prefHeight="70.0" prefWidth="462.0">
                                        <children>
-                                          <Button fx:id="dwc_deposit" mnemonicParsing="false" text="Deposit">
+                                          <Button fx:id="dwc_deposit" mnemonicParsing="false" onAction="#depositMoney" prefHeight="25.0" prefWidth="150.0" text="Deposit">
                                              <HBox.margin>
                                                 <Insets left="30.0" />
                                              </HBox.margin>
                                           </Button>
-                                          <Button fx:id="dwc_withdraw" mnemonicParsing="false" text="Withdraw">
+                                          <Button fx:id="dwc_withdraw" mnemonicParsing="false" onAction="#withdrawMoney" prefHeight="25.0" prefWidth="150.0" text="Withdraw">
                                              <HBox.margin>
-                                                <Insets left="200.0" />
+                                                <Insets left="100.0" />
                                              </HBox.margin>
                                           </Button>
                                        </children>
@@ -217,13 +235,25 @@
                                     <Label alignment="CENTER" text="Date of Birth:   " />
                                  </children>
                               </HBox>
-                              <TextField fx:id="dwc_accnum" prefHeight="26.0" prefWidth="246.0" promptText="9-digit number" GridPane.columnIndex="1" />
-                              <TextField fx:id="dwc_amount" promptText="Enter amount" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                              <TextField fx:id="dwc_firstName" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                              <TextField fx:id="dwc_lastName" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                              <TextField fx:id="dwc_accnum" prefHeight="26.0" prefWidth="246.0" promptText="9-digit number" GridPane.columnIndex="1">
+                                 <GridPane.margin>
+                                    <Insets right="20.0" />
+                                 </GridPane.margin></TextField>
+                              <TextField fx:id="dwc_amount" promptText="Enter amount" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                 <GridPane.margin>
+                                    <Insets right="20.0" />
+                                 </GridPane.margin></TextField>
+                              <TextField fx:id="dwc_firstName" prefHeight="25.0" prefWidth="434.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                 <GridPane.margin>
+                                    <Insets right="20.0" />
+                                 </GridPane.margin></TextField>
+                              <TextField fx:id="dwc_lastName" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                                 <GridPane.margin>
+                                    <Insets right="20.0" />
+                                 </GridPane.margin></TextField>
                               <DatePicker fx:id="dwc_dob" promptText="day of birth" GridPane.columnIndex="1" GridPane.rowIndex="6">
                                  <GridPane.margin>
-                                    <Insets left="50.0" />
+                                    <Insets />
                                  </GridPane.margin>
                               </DatePicker>
                               <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
@@ -233,16 +263,21 @@
                                           <Insets />
                                        </opaqueInsets>
                                        <HBox.margin>
-                                          <Insets left="50.0" />
+                                          <Insets />
                                        </HBox.margin>
                                     </DatePicker>
-                                    <Button fx:id="dwc_closeAll" mnemonicParsing="false" text="Close All">
+                                    <Button mnemonicParsing="false" onAction="#closeSingleAccount" prefHeight="25.0" prefWidth="150.0" text="Close">
                                        <HBox.margin>
-                                          <Insets left="100.0" />
+                                          <Insets left="50.0" />
                                        </HBox.margin>
                                     </Button>
                                  </children>
                               </HBox>
+                              <Button fx:id="dwc_closeAll" mnemonicParsing="false" onAction="#closeMultipleAccounts" prefHeight="25.0" prefWidth="150.0" text="Close All" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                                 <GridPane.margin>
+                                    <Insets left="200.0" />
+                                 </GridPane.margin>
+                              </Button>
                            </children>
                         </GridPane>
                      </children></AnchorPane>
@@ -314,4 +349,7 @@
         </tabs>
       </TabPane>
    </center>
+   <bottom>
+              <TextArea fx:id="resultText" prefHeight="200.0" prefWidth="674.0" BorderPane.alignment="CENTER" />
+   </bottom>
 </BorderPane>

@@ -10,6 +10,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.Scanner;
 
 import java.io.File;
@@ -25,6 +26,12 @@ public class Controller {
      * Account Database holds each account.
      */
     public static final AccountDatabase accountDatabase = new AccountDatabase();
+
+    private static final DecimalFormat df = new DecimalFormat("#,##0.00");
+
+    private static final double TEN_PERCENT = 0.1;
+
+    private static final double DAYS_IN_YEAR = 365;
 
     public Stage stage;
 
@@ -216,26 +223,32 @@ public class Controller {
         disableCampusToggle(true);
         loyal.setDisable(true);
         termComboBox.setDisable(true);
+        openDate.setDisable(true);
         at_types.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == rb_checking) {
                 disableCampusToggle(true);
                 termComboBox.setDisable(true);
                 loyal.setDisable(true);
+                openDate.setDisable(true);
             }
             else if (newValue == rb_cc) {
                 disableCampusToggle(false);
                 termComboBox.setDisable(true);
                 loyal.setDisable(true);
+                openDate.setDisable(true);
+                rb_nb.setSelected(true);
             } else if (newValue == rb_cd) {
                 termComboBox.setDisable(false);
                 disableCampusToggle(true);
                 cm_types.selectToggle(null);
                 loyal.setDisable(true);
+                openDate.setDisable(false);
             } else {
                 termComboBox.setDisable(true);
                 disableCampusToggle(true);
                 cm_types.selectToggle(null);
                 loyal.setDisable(false);
+                openDate.setDisable(true);
             }
         });
     }
@@ -270,11 +283,15 @@ public class Controller {
             return;
         }
 
-        Date dateOfBirth = getDOB();
+        Date dateOfBirth = getDate(dob);
 
         if (!checkDateOfBirth(accountType, dateOfBirth)) { return; }
         String first = firstName.getText();
         String last = lastName.getText();
+        if(first.isEmpty() || last.isEmpty()) {
+            resultText.appendText("Name invalid\n");
+            return;
+        }
 
         double balanceNum;
         try { balanceNum = Double.parseDouble(balance.getText()); }
@@ -290,12 +307,13 @@ public class Controller {
         Account account = createAccount(first, last, dateOfBirth, accountType, branch, balanceNum);
         accountDatabase.add(account);
         resultText.appendText(account.getAccountNumber().getType() + " account " + account.getAccountNumber() + " has been opened.\n");
+        clearArgumentsOpen();
     }
 
 
 
-    private Date getDOB() {
-        String date = dob.getValue().toString();
+    private Date getDate(DatePicker datePicker) {
+        String date = datePicker.getValue().toString();
         String[] dateArray = date.split("-");
         return new Date(Integer.parseInt(dateArray[1]),
                 Integer.parseInt(dateArray[2]),
@@ -376,17 +394,11 @@ public class Controller {
             case SAVINGS -> new Savings(branch, AccountType.SAVINGS, holder, balance);
             case MONEY_MARKET -> new MoneyMarket(branch, AccountType.MONEY_MARKET, holder, balance);
             case COLLEGE_CHECKING -> new CollegeChecking(branch, AccountType.COLLEGE_CHECKING, holder, getCampus(), balance);
-            case CD -> new CertificateDeposit(branch, AccountType.CD, holder, termComboBox.getValue(), getOpenDate(), balance);
+            case CD -> new CertificateDeposit(branch, AccountType.CD, holder, termComboBox.getValue(), getDate(openDate), balance);
         };
     }
 
-    private Date getOpenDate() {
-        String date = openDate.getValue().toString();
-        String[] dateArray = date.split("-");
-        return new Date(Integer.parseInt(dateArray[1]),
-                Integer.parseInt(dateArray[2]),
-                Integer.parseInt(dateArray[0]));
-    }
+
 
     private Campus getCampus() {
         if(rb_nb.isSelected()) {
@@ -560,27 +572,29 @@ public class Controller {
 
     @FXML
     private void loadAccounts() throws FileNotFoundException {
-
-        FileChooser fileChooser = new FileChooser();
-
-        File file = fileChooser.showOpenDialog(stage);
-
-        Scanner scanner = new Scanner(file);
-
-        while (scanner.hasNextLine()) {
-            String line = scanner.nextLine();
-            if (line.trim().isEmpty()) {
-                continue;
+        try {
+            FileChooser fileChooser = new FileChooser();
+            File file = fileChooser.showOpenDialog(stage);
+            if (file == null) {
+                return;
             }
-            String[] parts = line.split(",");
-            Account account = createAccount(parts);
-            accountDatabase.add(account);
+            Scanner scanner = new Scanner(file);
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                if (line.trim().isEmpty()) {
+                    continue;
+                }
+                String[] parts = line.split(",");
+                Account account = createAccount(parts);
+                accountDatabase.add(account);
+            }
+            resultText.appendText("Accounts in \"" + file + "\" loaded to the database.\n");
+        } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
+            resultText.appendText("Incorrect File Format\n");
         }
-
-        resultText.appendText("Accounts in \"" + file + "\" loaded to the database.\n");
     }
 
-    public static Account createAccount(String[] commandArray) {
+    public Account createAccount(String[] commandArray) {
         String accountType = commandArray[0];
         Branch branch = createBranch(commandArray[1]); //second input is the Branch
         String firstName = commandArray[2]; //third input is the first name of the holder
@@ -590,17 +604,17 @@ public class Controller {
         return getAccount(commandArray, firstName, lastName, dateOfBirth, branch, accountType, amount);
     }
 
-    public static Branch createBranch(String branchName) {
+    public Branch createBranch(String branchName) {
         Branch branch = null;
         try {
             branch = Branch.valueOf(branchName.toUpperCase());
         } catch (IllegalArgumentException e) {
-            System.out.println(branchName + " - invalid branch.");
+            resultText.appendText(branchName + " - invalid branch.\n");
         }
         return branch;
     }
 
-    public static Date createDate(String date) {
+    public Date createDate(String date) {
         String[] dateParts = date.split("/");
         int month = Integer.parseInt(dateParts[0]);
         int day = Integer.parseInt(dateParts[1]);
@@ -608,7 +622,7 @@ public class Controller {
         return new Date(month, day, year);
     }
 
-    private static Account getAccount(String[] commandArray, String firstName, String lastName, Date dateOfBirth, Branch branch, String accountType, double balance) {
+    private Account getAccount(String[] commandArray, String firstName, String lastName, Date dateOfBirth, Branch branch, String accountType, double balance) {
         Profile holder = new Profile(firstName, lastName, dateOfBirth);
         accountType = accountType.toLowerCase();
         return switch (accountType) {
@@ -626,37 +640,230 @@ public class Controller {
 
     @FXML
     public void processActivities() throws IOException {
-
-        FileChooser fileChooser = new FileChooser();
-
-        File file = fileChooser.showOpenDialog(stage);
-
-        Scanner scanner = new Scanner(file);
-        while (scanner.hasNextLine()) {
-            String line = scanner.nextLine();
-            if (line.trim().isEmpty()) {
-                continue;
+        try {
+            FileChooser fileChooser = new FileChooser();
+            File file = fileChooser.showOpenDialog(stage);
+            if (file == null) {
+                return;
             }
-            String[] parts = line.split(",");
-            Date date = createDate(parts[2]);
-            Branch branch = createBranch(parts[3]);
-            char type = parts[0].charAt(0);
-            double amount = Double.parseDouble(parts[4]);
-            Activity activity = new Activity(date, branch, type, amount, true);
-            AccountNumber accountNumber = new AccountNumber(parts[1]);
+            resultText.appendText("Processing \"" + file + "\"...\n");
+            Scanner scanner = new Scanner(file);
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                if (line.trim().isEmpty()) {
+                    continue;
+                }
+                String[] parts = line.split(",");
+                Date date = createDate(parts[2]);
+                Branch branch = createBranch(parts[3]);
+                char type = parts[0].charAt(0);
+                double amount = Double.parseDouble(parts[4]);
+                Activity activity = new Activity(date, branch, type, amount, true);
+                AccountNumber accountNumber = new AccountNumber(parts[1]);
+                int index = accountDatabase.find(accountNumber);
+                if (index == -1) {
+                    continue;
+                }
+                if (type == 'W') {
+                    accountDatabase.get(index).withdraw(date, branch, amount);
+                } else {
+                    accountDatabase.get(index).deposit(date, branch, amount);
+                }
+                resultText.appendText(accountNumber + "::" + activity + "\n");
+            }
+        } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
+            resultText.appendText("Incorrect File Format\n");
+        }
+    }
+
+    @FXML
+    private void closeSingleAccount() {
+        try {
+            String num = dwc_accnum.getText();
+            if(dwc_dateClose.getValue() == null) {
+                resultText.appendText("Date input Invalid\n");
+                return;
+            }
+            Date closeDate = getDate(dwc_dateClose);
+            AccountNumber accountNumber = new AccountNumber(num);
+            if (!accountDatabase.contains(accountNumber)) {
+                resultText.appendText(accountNumber + " account does not exist.\n");
+                return;
+            }
+            resultText.appendText("Closing account " + accountNumber + "\n");
+            int index = accountDatabase.find(accountNumber);
+            resultText.appendText("--\n");
+            printInterest(accountDatabase.get(index), closeDate);
+            accountDatabase.closeAccount(accountDatabase.get(index), closeDate);
+            clearArgumentsClose();
+        }catch(StringIndexOutOfBoundsException  | NullPointerException e) {
+            resultText.appendText("For input string: \"" + dwc_accnum.getText() + "\" - not a valid account number.\n");
+        }
+    }
+
+
+    private void printInterest(Account account, Date closeDate) {
+        double interestRate;
+        resultText.appendText("interest earned: $\n");
+
+        if (account.getType() == AccountType.CD) {
+            CertificateDeposit cd = (CertificateDeposit) account;
+            Date openDate = cd.getOpen();
+            int daysHeld = closeDate.daysFrom(openDate);
+            double interest;
+            if (closeDate.isAfter(openDate.addMonths(cd.getTerm()))) {
+                interestRate = account.interestRate();
+                interest = account.getBalance() * interestRate / DAYS_IN_YEAR * daysHeld;
+                resultText.appendText(df.format(interest) + "\n");
+            } else {
+                interestRate = cd.interestRate(closeDate);
+                interest = account.getBalance() * interestRate / DAYS_IN_YEAR * daysHeld;
+                resultText.appendText(df.format(interest) + "\n");
+                resultText.appendText("  [penalty] $" + df.format(TEN_PERCENT * interest) + "\n");
+            }
+        } else {
+            interestRate = account.interestRate();
+            double interest = account.getBalance() * interestRate / DAYS_IN_YEAR * closeDate.getDay();
+            resultText.appendText(df.format(interest)+ "\n");
+        }
+    }
+
+
+
+    @FXML
+    private void closeMultipleAccounts() {
+            String firstName = this.dwc_firstName.getText();
+            String lastName = this.dwc_lastName.getText();
+            if (firstName.isEmpty() || lastName.isEmpty()) {
+                resultText.appendText("Name Invalid\n");
+                return;
+            }
+            if (dwc_dob.getValue() == null || dwc_dateClose.getValue() == null) {
+                resultText.appendText("Date input Invalid\n");
+                return;
+            }
+            Date dateOfBirth = getDate(dwc_dob);
+            Date closeDate = getDate(dwc_dateClose);
+            Profile holder = new Profile(firstName, lastName, dateOfBirth);
+            List<Account> accounts = findAllAccounts(holder);
+            if (accounts.isEmpty()) {
+                resultText.appendText(firstName + " " + lastName + " " + dateOfBirth + " does not have any accounts in the database.\n");
+            } else {
+                resultText.appendText("Closing accounts for " + firstName + " " + lastName + " " + dateOfBirth + "\n");
+                for (Account account : accounts) {
+                    resultText.appendText("--" + account.getAccountNumber() + "\n");
+                    printInterest(account, closeDate);
+                }
+                int index = accountDatabase.find(firstName, lastName, dateOfBirth);
+                while (index != -1) {
+                    accountDatabase.closeAccount(accountDatabase.get(index), closeDate);
+                    index = accountDatabase.find(firstName, lastName, dateOfBirth);
+                }
+                resultText.appendText("All accounts for " + firstName + " " + lastName + " " + dateOfBirth + " are closed and moved to archive.\n");
+            }
+            clearArgumentsClose();
+    }
+
+
+
+    private List<Account> findAllAccounts(Profile holder) {
+        List<Account> accounts = new List<>();
+        for (int i = 0; i < accountDatabase.size(); i++) {
+            if (accountDatabase.get(i).getHolder().equals(holder)) {
+                accounts.add(accountDatabase.get(i));
+            }
+        }
+        return accounts;
+    }
+
+
+
+    @FXML
+    private void withdrawMoney() {
+        try {
+            double withdrawalAmount = Double.parseDouble(dwc_amount.getText());
+            if (withdrawalAmount <= 0) {
+                resultText.appendText(withdrawalAmount + " withdrawal amount cannot be 0 or negative.\n");
+                return;
+            }
+            AccountNumber accountNumber = new AccountNumber(dwc_accnum.getText());
             int index = accountDatabase.find(accountNumber);
             if (index == -1) {
-                continue;
+                resultText.appendText(accountNumber + " does not exist.\n");
+                return;
             }
-            if (type == 'W') {
-                accountDatabase.get(index).withdraw(date, branch, amount);
+            boolean sufficientFunds = accountDatabase.get(index).getBalance() >= withdrawalAmount;
+            if (accountDatabase.get(index).getBalance() - withdrawalAmount < MONEY_MARKET_MINIMUM && accountDatabase.get(index).getType() == AccountType.MONEY_MARKET) {
+                if (sufficientFunds) {
+                    resultText.appendText(accountNumber + " balance below $2,000 - $" + df.format(withdrawalAmount) + " withdrawn from " + accountNumber + "\n");
+                    accountDatabase.withdraw(accountNumber, withdrawalAmount);
+                } else {
+                    resultText.appendText(accountNumber + " balance below $2,000 - withdrawing $" + df.format(withdrawalAmount) + " - insufficient funds." + "\n");
+                }
             } else {
-                accountDatabase.get(index).deposit(date, branch, amount);
+                if (sufficientFunds) {
+                    resultText.appendText("$" + df.format(withdrawalAmount) + " withdrawn from " + accountNumber + "\n");
+                    accountDatabase.withdraw(accountNumber, withdrawalAmount);
+                } else {
+                    resultText.appendText("$" + df.format(withdrawalAmount) + " - insufficient funds.\n");
+                }
             }
-            resultText.appendText(accountNumber + "::" + activity + "\n");
+        }catch(StringIndexOutOfBoundsException  | NullPointerException e) {
+            resultText.appendText("For input string: \"" + dwc_accnum.getText() + "\" - not a valid account number.\n");
         }
+        catch (NumberFormatException e) {
+            resultText.appendText("For input string: \"" + dwc_amount.getText() + "\" - not a valid amount.\n");
+        }
+    }
 
-        resultText.appendText("Processing \"" + file + "\"...\n");
+
+    @FXML
+    private void depositMoney() {
+        try {
+            double depositAmount = Double.parseDouble(dwc_amount.getText());
+            if (depositAmount <= 0) {
+                resultText.appendText(depositAmount + " - deposit amount cannot be 0 or negative.\n");
+                return;
+            }
+            AccountNumber accountNumber = new AccountNumber(dwc_accnum.getText());
+            if (!accountDatabase.contains(accountNumber)) {
+                resultText.appendText(accountNumber + " does not exist.\n");
+                return;
+            }
+            accountDatabase.deposit(accountNumber, depositAmount);
+            resultText.appendText("$" + df.format(depositAmount) + " deposited to " + accountNumber + "\n");
+        } catch(StringIndexOutOfBoundsException | NullPointerException e) {
+            resultText.appendText("For input string: \"" + dwc_accnum.getText() + "\" - not a valid account number.\n");
+        }
+        catch (NumberFormatException e) {
+            resultText.appendText("For input string: \"" + dwc_amount.getText() + "\" - not a valid amount." + "\n");
+        }
+    }
+
+    @FXML
+    private void clearArgumentsOpen() {
+        initialize();
+        firstName.clear();
+        lastName.clear();
+        dob.getEditor().clear();
+        openDate.getEditor().clear();
+        loyal.setSelected(false);
+        rb_nb.setSelected(false);
+        rb_cam.setSelected(false);
+        rb_nw.setSelected(false);
+        branchComboBox.getEditor().clear();
+        termComboBox.getEditor().clear();
+    }
+
+    @FXML
+    private void clearArgumentsClose() {
+        dwc_amount.clear();
+        dwc_accnum.clear();
+        dwc_dateClose.getEditor().clear();
+        dwc_dob.getEditor().clear();
+        dwc_firstName.clear();
+        dwc_lastName.clear();
+
     }
 }
 
