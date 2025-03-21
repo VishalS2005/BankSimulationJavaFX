@@ -152,7 +152,7 @@
                                                 <Insets left="50.0" />
                                              </HBox.margin>
                                           </Button>
-                                          <Button mnemonicParsing="false" onAction="#clearArgumentsOpen" prefHeight="26.0" prefWidth="137.0" text="Clear">
+                                          <Button mnemonicParsing="false" onAction="#clearArgumentsOpen" prefHeight="26.0" prefWidth="137.0" text="Clear all fields">
                                              <HBox.margin>
                                                 <Insets left="50.0" />
                                              </HBox.margin>
