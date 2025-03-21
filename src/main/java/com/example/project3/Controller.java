@@ -224,6 +224,8 @@ public class Controller {
         loyal.setDisable(true);
         termComboBox.setDisable(true);
         openDate.setDisable(true);
+        branchComboBox.setEditable(false);
+        termComboBox.setEditable(false);
         at_types.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == rb_checking) {
                 disableCampusToggle(true);
@@ -303,8 +305,8 @@ public class Controller {
             resultText.appendText(first + " " + last + " already has a " + accountType + " account.\n");
             return;
         }
-        checkBalance(balanceNum, accountType);
-        Account account = createAccount(first, last, dateOfBirth, accountType, branch, balanceNum);
+        if (!checkBalance(balanceNum, accountType)) { return; }
+        Account account = getAccount(first, last, dateOfBirth, branch,accountType, balanceNum);
         accountDatabase.add(account);
         resultText.appendText(account.getAccountNumber().getType() + " account " + account.getAccountNumber() + " has been opened.\n");
         clearArgumentsOpen();
@@ -357,20 +359,7 @@ public class Controller {
         }
     }
 
-    /**
-     * Creates an Account object based on provided parameters.
-     * Delegates to the getAccount method to initialize and return the appropriate Account instance.
-     *
-     * @param firstName    the first name of the account holder
-     * @param lastName     the last name of the account holder
-     * @param dateOfBirth  a Date object representing the birthdate of the account holder
-     * @param branch       the Branch object representing the bank branch where the account is opened
-     * @param balance      the initial balance for the account
-     * @return the created Account object
-     */
-    private Account createAccount(String firstName, String lastName, Date dateOfBirth, AccountType accountType, Branch branch, double balance) {
-        return getAccount(firstName, lastName, dateOfBirth, branch, accountType, balance);
-    }
+
 
     /**
      * Creates and returns an Account object based on the provided parameters.
@@ -413,26 +402,19 @@ public class Controller {
     }
 
 
-
-    /**
-     * Checks if balance of the Account being opened is valid.
-     * A starting balance of 0 or less is invalid.
-     * A Money Market Account with less than 2000 is invalid.
-     *
-     * @param balance  value of money stored in Account being opened
-     * @param acctType type of Account being opened
-     */
-    private void checkBalance(double balance, AccountType acctType) {
+    private boolean checkBalance(double balance, AccountType acctType) {
         if (balance <= 0) { //balance must be more than 0
             resultText.appendText("Initial deposit cannot be 0 or negative.\n");
+            return false;
         } else if (balance < MONEY_MARKET_MINIMUM && acctType.equals(AccountType.MONEY_MARKET)) { //Money Market account must have at least $2000
             resultText.appendText("Minimum of $2,000 to open a Money Market account.\n");
+            return false;
         } else if (balance < CD_MINIMUM && acctType.equals(AccountType.CD)) {
             resultText.appendText("Minimum of $1,000 to open a Certificate Deposit account.\n");
+            return false;
         }
+        return true;
     }
-
-
 
     /**
      * Uses the client's selection in the account type toggle group to determine the type of account they want to open.
@@ -846,13 +828,14 @@ public class Controller {
         firstName.clear();
         lastName.clear();
         dob.getEditor().clear();
+        balance.clear();
         openDate.getEditor().clear();
         loyal.setSelected(false);
         rb_nb.setSelected(false);
         rb_cam.setSelected(false);
         rb_nw.setSelected(false);
-        branchComboBox.getEditor().clear();
-        termComboBox.getEditor().clear();
+        branchComboBox.setValue(null);
+        termComboBox.setValue(null);
     }
 
     @FXML
