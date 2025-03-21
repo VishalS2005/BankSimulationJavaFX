@@ -429,7 +429,7 @@ public class Controller {
         } else if (rb_savings.isSelected()) {
             return AccountType.SAVINGS;
         } else if (rb_mm.isSelected()) {
-            return AccountType.SAVINGS;
+            return AccountType.MONEY_MARKET;
         }
         return AccountType.CD;
     }
