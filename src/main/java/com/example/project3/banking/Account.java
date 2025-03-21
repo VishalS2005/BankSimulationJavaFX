@@ -86,12 +86,14 @@ public abstract class Account implements Comparable<Account> {
     /**
      * Extracts the statement detailing activities of a bank.
      */
-    public final void statement() {
-        printActivities();
+    public final String statement() {
+        String returnString = "";
+        returnString += printActivities();
         double interest = interest();
         double fee = fee();
-        printInterestFee(interest, fee);
-        printBalance(interest, fee);
+        returnString += printInterestFee(interest, fee);
+        returnString += printBalance(interest, fee);
+        return returnString;
     }
 
     /**
@@ -279,13 +281,16 @@ public abstract class Account implements Comparable<Account> {
     /**
      * Prints the list of activities associated with this account.
      */
-    private void printActivities() {
+    private String printActivities() {
+        StringBuilder returnString = new StringBuilder();
         if (!this.activities.isEmpty()) {
-            System.out.println("\t[Activity]");
+            returnString.append("\t[Activity]\n");
         }
         for (Activity activity : this.activities) {
-            System.out.println("\t\t" + activity);
+            returnString.append("\t\t").append(activity).append("\n");
         }
+
+        return returnString.toString();
     }
 
     /**
@@ -294,8 +299,8 @@ public abstract class Account implements Comparable<Account> {
      * @param interest the interest amount to be displayed
      * @param fee      the fee amount to be displayed
      */
-    private void printInterestFee(double interest, double fee) {
-        System.out.println("\t[interest] $" + df.format(interest) + " [Fee] $" + df.format(fee));
+    private String printInterestFee(double interest, double fee) {
+        return ("\t[interest] $" + df.format(interest) + " [Fee] $" + df.format(fee) + "\n");
     }
 
     /**
@@ -304,8 +309,8 @@ public abstract class Account implements Comparable<Account> {
      * @param interest the interest amount to be added to the balance
      * @param fee      the fee amount to be deducted from the balance
      */
-    private void printBalance(double interest, double fee) {
-        System.out.println("\t[Balance] $" + df.format(balance + interest - fee));
+    private String printBalance(double interest, double fee) {
+        return ("\t[Balance] $" + df.format(balance + interest - fee) + "\n");
     }
 
     /**

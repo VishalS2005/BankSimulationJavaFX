@@ -532,7 +532,7 @@ public class Controller {
                 resultText.appendText(holderCount + "." + accountDatabase.get(i).getHolder() + "\n");
             }
             resultText.appendText("\t[Account#] " + accountDatabase.get(i).getAccountNumber() + "\n");
-            accountDatabase.get(i).statement();
+            resultText.appendText(accountDatabase.get(i).statement());
             resultText.appendText("\n");
         }
         resultText.appendText("*end of statements.\n\n");
