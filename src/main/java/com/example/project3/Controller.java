@@ -185,24 +185,6 @@ public class Controller {
     private TextField dwc_lastName;
 
     /**
-     * Button used to deposit money into an Account.
-     */
-    @FXML
-    private Button dwc_deposit;
-
-    /**
-     * Button used to deposit money into an Account.
-     */
-    @FXML
-    private Button dwc_withdraw;
-
-    /**
-     * Button used to close all accounts associated with a Profile.
-     */
-    @FXML
-    private Button dwc_closeAll;
-
-    /**
      * Date picker where holder chooses the date they close the Account.
      */
     @FXML
@@ -247,6 +229,7 @@ public class Controller {
                 disableCampusToggle(true);
                 termComboBox.setDisable(true);
                 openDate.setDisable(true);
+                cm_types.selectToggle(null);
             }
             else if (newValue == rb_cc) {
                 disableCampusToggle(false);
