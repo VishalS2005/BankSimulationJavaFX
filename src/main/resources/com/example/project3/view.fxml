@@ -134,11 +134,11 @@
                                           </HBox>
                                           <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                              <children>
-                                                <RadioButton fx:id="rb_cam" contentDisplay="CENTER" disable="true" mnemonicParsing="false" text="Camden" toggleGroup="$cm_types">
+                                                <RadioButton fx:id="rb_nw" contentDisplay="CENTER" disable="true" mnemonicParsing="false" text="Newark" toggleGroup="$cm_types">
                                                    <HBox.margin>
                                                       <Insets left="35.0" />
                                                    </HBox.margin></RadioButton>
-                                                <RadioButton fx:id="rb_nw" disable="true" mnemonicParsing="false" text="Newark" toggleGroup="$cm_types">
+                                                <RadioButton fx:id="rb_cam" disable="true" mnemonicParsing="false" text="Camden" toggleGroup="$cm_types">
                                                    <HBox.margin>
                                                       <Insets left="30.0" />
                                                    </HBox.margin>
