@@ -284,6 +284,7 @@ public class Controller {
         }
         if (accountType != AccountType.CD && accountDatabase.contains(first, last, dateOfBirth, accountType)) {
             resultText.appendText(first + " " + last + " already has a " + accountType + " account.\n");
+            return;
         }
         checkBalance(balanceNum, accountType);
         Account account = createAccount(first, last, dateOfBirth, accountType, branch, balanceNum);
