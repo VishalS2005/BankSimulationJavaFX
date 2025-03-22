@@ -59,15 +59,15 @@ public class AccountNode {
      */
     @Override
     public String toString() {
-        String returnString = Account.toString() + " Closed[" + close.toString() + "]";
+        StringBuilder returnString = new StringBuilder(Account.toString() + " Closed[" + close.toString() + "]");
 
         if (!Account.getActivities().isEmpty()) {
-            returnString += "\n\t[Activity]";
+            returnString.append("\n\t[Activity]");
             for (Activity activity : Account.getActivities()) {
-                returnString += ("\n\t\t" + activity.toString());
+                returnString.append("\n\t\t").append(activity.toString());
             }
         }
 
-        return returnString;
+        return returnString.toString();
     }
 }

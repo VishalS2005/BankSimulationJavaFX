@@ -527,7 +527,7 @@ public class Controller {
         resultText.appendText("\n*List of closed accounts in the archive.\n");
         AccountNode current = accountDatabase.getArchive().getFirst();
         while (current != null) {
-            resultText.appendText(current + "\n\n");
+            resultText.appendText(current + "\n");
             current = current.getNext();
         }
         resultText.appendText("*end of list.\n\n");
@@ -679,6 +679,7 @@ public class Controller {
                 }
                 resultText.appendText(accountNumber + "::" + activity + "\n");
             }
+        resultText.appendText("Account activities in \"activities.txt\" processed.\n");
         } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
             resultText.appendText("Incorrect File Format\n");
         }
@@ -703,7 +704,7 @@ public class Controller {
             }
             resultText.appendText("Closing account " + accountNumber + "\n");
             int index = accountDatabase.find(accountNumber);
-            resultText.appendText("--\n");
+            resultText.appendText("--");
             printInterest(accountDatabase.get(index), closeDate);
             accountDatabase.closeAccount(accountDatabase.get(index), closeDate);
             clearArgumentsClose();
