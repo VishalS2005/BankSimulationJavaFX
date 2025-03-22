@@ -721,7 +721,7 @@ public class Controller {
      */
     private void printInterest(Account account, Date closeDate) {
         double interestRate;
-        resultText.appendText("interest earned: $\n");
+        resultText.appendText("interest earned: $");
 
         if (account.getType() == AccountType.CD) {
             CertificateDeposit cd = (CertificateDeposit) account;
@@ -769,7 +769,7 @@ public class Controller {
             } else {
                 resultText.appendText("Closing accounts for " + firstName + " " + lastName + " " + dateOfBirth + "\n");
                 for (Account account : accounts) {
-                    resultText.appendText("--" + account.getAccountNumber() + "\n");
+                    resultText.appendText("--" + account.getAccountNumber() + " ");
                     printInterest(account, closeDate);
                 }
                 int index = accountDatabase.find(firstName, lastName, dateOfBirth);
