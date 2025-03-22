@@ -222,8 +222,6 @@ public class Controller {
         disableCampusToggle(true);
         termComboBox.setDisable(true);
         openDate.setDisable(true);
-        branchComboBox.setEditable(false);
-        termComboBox.setEditable(false);
         at_types.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == rb_checking) {
                 disableCampusToggle(true);
