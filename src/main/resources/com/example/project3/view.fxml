@@ -260,11 +260,6 @@
                                  <GridPane.margin>
                                     <Insets right="20.0" />
                                  </GridPane.margin></TextField>
-                              <DatePicker fx:id="dwc_dob" promptText="day of birth" GridPane.columnIndex="1" GridPane.rowIndex="6">
-                                 <GridPane.margin>
-                                    <Insets />
-                                 </GridPane.margin>
-                              </DatePicker>
                               <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                                  <children>
                                     <DatePicker fx:id="dwc_dateClose" promptText="day of close">
@@ -282,11 +277,21 @@
                                     </Button>
                                  </children>
                               </HBox>
-                              <Button mnemonicParsing="false" onAction="#closeMultipleAccounts" prefHeight="25.0" prefWidth="150.0" text="Close All" GridPane.columnIndex="1" GridPane.rowIndex="6">
-                                 <GridPane.margin>
-                                    <Insets left="200.0" />
-                                 </GridPane.margin>
-                              </Button>
+                              <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                                 <children>
+                                    <DatePicker fx:id="dwc_dob" promptText="day of birth" />
+                                    <Button mnemonicParsing="false" onAction="#closeMultipleAccounts" prefHeight="25.0" prefWidth="150.0" text="Close All">
+                                       <HBox.margin>
+                                          <Insets left="50.0" />
+                                       </HBox.margin>
+                                    </Button>
+                                    <Button mnemonicParsing="false" onAction="#clearArgumentsClose" prefHeight="26.0" prefWidth="105.0" text="Clear">
+                                       <HBox.margin>
+                                          <Insets left="35.0" />
+                                       </HBox.margin>
+                                    </Button>
+                                 </children>
+                              </HBox>
                            </children>
                         </GridPane>
                      </children></AnchorPane>

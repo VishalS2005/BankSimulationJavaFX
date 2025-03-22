@@ -212,7 +212,7 @@ public class Controller {
      */
     @FXML
     private void initialize() {
-        Integer[] terms = new Integer[] {3, 6, 9, 12};
+        Integer[] terms = new Integer[] {(Integer) 3, (Integer) 6, (Integer) 9, (Integer) 12};
         Branch[] branches = new Branch[] {Branch.EDISON, Branch.BRIDGEWATER, Branch.PRINCETON, Branch.PISCATAWAY, Branch.WARREN};
         ObservableList<Integer> termsList = FXCollections.observableArrayList(terms);
         ObservableList<Branch> branchList = FXCollections.observableArrayList(branches);
