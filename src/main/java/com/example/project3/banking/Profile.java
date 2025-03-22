@@ -38,10 +38,15 @@ public class Profile implements Comparable<Profile> {
         this.dateOfBirth = dateOfBirth;
     }
 
-
+    /**
+     * Gets the first name of a Profile.
+     *
+     * @return String that is the firstName of a Profile
+     */
     public String getFirstName() {
         return firstName;
     }
+
     /**
      * Gets the last name of the holder
      *

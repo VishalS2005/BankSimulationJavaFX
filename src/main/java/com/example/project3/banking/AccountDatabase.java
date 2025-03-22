@@ -32,6 +32,11 @@ public class AccountDatabase extends List<Account> {
         this.archive = new Archive();
     }
 
+    /**
+     * Returns the collection of closed Accounts.
+     *
+     * @return Archive of closed accounts
+     */
     public Archive getArchive() {
         return archive;
     }

@@ -36,6 +36,11 @@ public class Archive {
         first = newNode;
     }
 
+    /**
+     * Returns the first AccountNode in the AccountDatabase
+     *
+     * @return AccountNode that represents an Account in the AccountDatabase
+     */
     public AccountNode getFirst() {
         return first;
     }
