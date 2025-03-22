@@ -85,6 +85,8 @@ public abstract class Account implements Comparable<Account> {
 
     /**
      * Extracts the statement detailing activities of a bank.
+     *
+     * @return String full statement to describe activities of a bank
      */
     public final String statement() {
         String returnString = "";
@@ -150,7 +152,7 @@ public abstract class Account implements Comparable<Account> {
      * @param branch the branch where the withdrawal occurs
      * @param amount the amount to be withdrawn from the account balance
      */
-    public void withdraw(Date date, Branch branch, double amount) { //to update the balance
+    public void withdraw(Date date, Branch branch, double amount) {
         this.balance -= amount;
         Activity activity = new Activity(date, branch, 'W', amount, true);
         addActivity(activity);
@@ -175,7 +177,7 @@ public abstract class Account implements Comparable<Account> {
      * @param branch the branch where the deposit is made
      * @param amount the amount of money to be deposited into the account
      */
-    public void deposit(Date date, Branch branch, double amount) { //to update the balance
+    public void deposit(Date date, Branch branch, double amount) {
         this.balance += amount;
         Activity activity = new Activity(date, branch, 'D', amount, true);
         addActivity(activity);
@@ -280,6 +282,8 @@ public abstract class Account implements Comparable<Account> {
 
     /**
      * Prints the list of activities associated with this account.
+     *
+     * @return String representation of all the Activities of an Account
      */
     private String printActivities() {
         StringBuilder returnString = new StringBuilder();
@@ -298,6 +302,7 @@ public abstract class Account implements Comparable<Account> {
      *
      * @param interest the interest amount to be displayed
      * @param fee      the fee amount to be displayed
+     * @return String that represents the interest fee formatted
      */
     private String printInterestFee(double interest, double fee) {
         return ("\t[interest] $" + df.format(interest) + " [Fee] $" + df.format(fee) + "\n");
@@ -308,6 +313,7 @@ public abstract class Account implements Comparable<Account> {
      *
      * @param interest the interest amount to be added to the balance
      * @param fee      the fee amount to be deducted from the balance
+     * @return String that represents the balance based on interest and fee
      */
     private String printBalance(double interest, double fee) {
         return ("\t[Balance] $" + df.format(balance + interest - fee) + "\n");
