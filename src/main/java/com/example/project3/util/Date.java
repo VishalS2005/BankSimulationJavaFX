@@ -131,38 +131,6 @@ public class Date implements Comparable<Date> {
     }
 
     /**
-     * Checks if the date provided by the user is on the calendar.
-     * Checks the month, the days in the month, and if it is a leap year.
-     *
-     * @return true if the date is a valid date on the calendar
-     * false otherwise
-     */
-    public boolean isValid() {
-        if (this.month < Calendar.JANUARY + MONTH_OFFSET || this.month > Calendar.DECEMBER + MONTH_OFFSET) {
-            return false;
-        }
-        int maxDays; //most amount of days in each month
-        if (this.month == Calendar.FEBRUARY + MONTH_OFFSET) {
-            if (isLeapYear()) {
-                maxDays = DAYS_IN_FEBRUARY_LEAP;
-            } else {
-                maxDays = DAYS_IN_FEBRUARY_NORMAL;
-            }
-        } else if (this.month == Calendar.JANUARY + MONTH_OFFSET
-                || this.month == Calendar.MARCH + MONTH_OFFSET
-                || this.month == Calendar.MAY + MONTH_OFFSET
-                || this.month == Calendar.JULY + MONTH_OFFSET
-                || this.month == Calendar.AUGUST + MONTH_OFFSET
-                || this.month == Calendar.OCTOBER + MONTH_OFFSET
-                || this.month == Calendar.DECEMBER + MONTH_OFFSET) {
-            maxDays = DAYS_IN_LONG_MONTH;
-        } else {
-            maxDays = DAYS_IN_SHORT_MONTH;
-        }
-        return this.day >= 1 && this.day <= maxDays;
-    }
-
-    /**
      * Checks if the Account holder is 18 years or older.
      * Uses the Calendar library to import the actual date for calculations.
      * Note: Month is 0-based in Calendar.
