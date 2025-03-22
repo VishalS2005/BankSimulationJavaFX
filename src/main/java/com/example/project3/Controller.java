@@ -269,6 +269,8 @@ public class Controller {
 
     /**
      * Enables/disables the campus toggle group.
+     *
+     * @param disable true if toggle group should be disabled, false to enable
      */
     private void disableCampusToggle(boolean disable){
         rb_nb.setDisable(disable);
@@ -348,10 +350,7 @@ public class Controller {
      * @return true if valid date, false otherwise
      */
     private boolean checkDateOfBirth(AccountType accountType, Date dob) {
-        if (!dob.isValid()) {
-            resultText.appendText("DOB invalid: " + dob + " not a valid calendar date!\n");
-            return false;
-        } else if (dob.isAfterToday()) {
+        if (dob.isAfterToday()) {
             resultText.appendText("DOB invalid: " + dob + " cannot be today or a future day.\n");
             return false;
         } else if (!dob.isEighteen()) {
