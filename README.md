@@ -146,3 +146,22 @@ Place these in the correct folder (usually root or resources):
 - Generate fresh Javadoc (CLI):
 ```bash
 javadoc -d Javadoc -sourcepath src/main/java -subpackages com.example.project3
+```
+
+---
+
+## Contributing
+Vishal Saravanan, GitHub: VishalS2005
+Yining Chen, GitHub: wekantakabotdis
+Professor Lily Chang, Rutgers University Computer Science Department
+
+---
+
+## License
+GNU GENERAL PUBLIC LICENSE
+Version 3, 29 June 2007
+
+---
+
+## Contact
+vishalsaran2021@gmail.com
